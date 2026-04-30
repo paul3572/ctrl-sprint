@@ -1,3 +1,9 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Packages.props" />
+  </Folder>
   <Project Path="cts.core.api.tourguide/cts.core.api.tourguide.csproj" />
+  <Project Path="cts.core.svc.application/cts.core.svc.application.csproj" />
+  <Project Path="cts.core.svc.domain/cts.core.svc.domain.csproj" />
+  <Project Path="cts.core.svc.infrastructure/cts.core.svc.infrastructure.csproj" />
 </Solution>
