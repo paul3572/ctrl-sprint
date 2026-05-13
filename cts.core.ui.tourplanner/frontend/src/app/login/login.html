@@ -1,0 +1,41 @@
+<div class="auth-page">
+  <section class="auth-shell">
+    <aside class="auth-visual">
+      <div class="brand-badge"><span class="brand-dot"></span> Ctrl Sprint</div>
+      <div class="hero-copy"><p class="hero-kicker">Welcome back</p>
+        <h1 class="hero-title"> Pick up your <span class="gradient-text">momentum.</span></h1>
+        <p class="hero-text"> Sign in to jump back into your tasks, keep your plan moving, and stay in the zone with a
+          clean, focused dashboard. </p>
+        <div class="hero-stats">
+          <div class="stat-card"><span class="stat-value">Fast</span> <span
+            class="stat-label">Simple sign-in flow</span></div>
+          <div class="stat-card"><span class="stat-value">Secure</span> <span
+            class="stat-label">Modern auth-ready UI</span></div>
+          <div class="stat-card"><span class="stat-value">Smooth</span> <span
+            class="stat-label">Polished mobile layout</span></div>
+        </div>
+      </div>
+    </aside>
+    <div class="auth-form">
+      <div class="form-panel">
+        <div class="form-badge">Login</div>
+        <h2 class="form-title">Sign in</h2>
+        <p class="form-subtitle">Use your email and password to access your workspace.</p>
+        <form>
+          <div class="form-group">
+            <div class="input-wrap"><input id="login-email" type="email" placeholder=" " required/> <label
+              for="login-email">Email address</label> <span class="form-icon">✉</span></div>
+          </div>
+          <div class="form-group">
+            <div class="input-wrap"><input id="login-password" type="password" placeholder=" " required/> <label
+              for="login-password">Password</label> <span class="form-icon">🔒</span></div>
+          </div>
+          <div class="helper-row"><span>Tip: keep it short and sharp.</span> <a href="javascript:void(0)">Forgot
+            password?</a></div>
+          <button type="submit" class="btn" (click)="onLoginClicked()">Sign in</button>
+        </form>
+        <div class="form-divider"></div>
+        <a [routerLink]="AppPaths.register" class="btn-outline auth-link"> Create an account </a></div>
+    </div>
+  </section>
+</div>

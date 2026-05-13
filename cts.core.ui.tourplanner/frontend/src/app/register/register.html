@@ -1,0 +1,43 @@
+<div class="auth-page">
+  <section class="auth-shell">
+    <aside class="auth-visual">
+      <div class="brand-badge"><span class="brand-dot"></span> Ctrl Sprint</div>
+      <div class="hero-copy"><p class="hero-kicker">Get started</p>
+        <h1 class="hero-title"> Create your <span class="gradient-text">flow.</span></h1>
+        <p class="hero-text"> Build your account in seconds and get a beautifully organized place to manage tasks,
+          goals, and daily momentum. </p>
+        <div class="hero-stats">
+          <div class="stat-card"><span class="stat-value">Quick</span> <span
+            class="stat-label">Minimal account setup</span></div>
+          <div class="stat-card"><span class="stat-value">Clean</span> <span
+            class="stat-label">Distraction-free layout</span></div>
+          <div class="stat-card"><span class="stat-value">Ready</span> <span class="stat-label">Built for future backend auth</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <div class="auth-form">
+      <div class="form-panel">
+        <div class="form-badge">Register</div>
+        <h2 class="form-title">Create account</h2>
+        <p class="form-subtitle">Join the workspace and start planning with style.</p>
+        <form>
+          <div class="form-group">
+            <div class="input-wrap"><input id="register-email" type="email" placeholder=" " required/> <label
+              for="register-email">Email address</label> <span class="form-icon">✉</span></div>
+          </div>
+          <div class="form-group">
+            <div class="input-wrap"><input id="register-password" type="password" placeholder=" " required/> <label
+              for="register-password">Password</label> <span class="form-icon">🔒</span></div>
+          </div>
+          <div class="form-group">
+            <div class="input-wrap"><input id="register-dob" type="date" value="2000-01-01" required/> <label
+              for="register-dob">Date of Birth</label> <span class="form-icon">📅</span></div>
+          </div>
+          <button type="submit" class="btn" (click)="onRegisterClicked()">Create account</button>
+        </form>
+        <div class="form-divider"></div>
+        <a [routerLink]="AppPaths.login" class="btn-outline auth-link"> Already have an account? Sign in </a></div>
+    </div>
+  </section>
+</div>
