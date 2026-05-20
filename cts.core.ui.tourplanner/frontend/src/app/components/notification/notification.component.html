@@ -1,0 +1,12 @@
+﻿<div class="notification" [class]="'notification--' + notification.type">
+  <div class="notification-content">
+    <span class="notification-icon">{{ getIcon() }}</span>
+    <p class="notification-message">{{ notification.message }}</p>
+  </div>
+  <button
+    class="notification-close"
+    (click)="onClose()"
+    aria-label="Close notification">
+    ✕
+  </button>
+</div>

@@ -1,11 +1,15 @@
 import { Routes } from '@angular/router';
-import { Home } from './home/home';
-import { Register } from './register/register';
-import { Login } from './login/login';
+import { Home } from './components/home/home';
+import { Register } from './components/register/register';
+import { Login } from './components/login/login';
+import { authGuard } from './guards/auth.guard';
+import { guestGuard } from './guards/guest.guard';
 
 export const routes: Routes = [
-  { path: '', component: Home },
-  { path: 'register', component: Register },
-  { path: 'login', component: Login },
-  { path: '**', redirectTo: '' },
+  { path: 'register', component: Register, canActivate: [guestGuard] },
+  { path: 'login', component: Login, canActivate: [guestGuard] },
+
+  { path: '', component: Home, canActivate: [authGuard] },
+
+  { path: '**', redirectTo: '/login' },
 ];

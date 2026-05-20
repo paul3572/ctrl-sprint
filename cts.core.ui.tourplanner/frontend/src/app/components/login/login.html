@@ -23,11 +23,11 @@
         <p class="form-subtitle">Use your email and password to access your workspace.</p>
         <form>
           <div class="form-group">
-            <div class="input-wrap"><input id="login-email" type="email" placeholder=" " required/> <label
+            <div class="input-wrap"><input id="login-email" type="email" placeholder="email" [(ngModel)]="email" required/> <label
               for="login-email">Email address</label> <span class="form-icon">✉</span></div>
           </div>
           <div class="form-group">
-            <div class="input-wrap"><input id="login-password" type="password" placeholder=" " required/> <label
+            <div class="input-wrap"><input id="login-password" type="password" placeholder="password" [(ngModel)]="password" required/> <label
               for="login-password">Password</label> <span class="form-icon">🔒</span></div>
           </div>
           <div class="helper-row"><span>Tip: keep it short and sharp.</span> <a href="javascript:void(0)">Forgot

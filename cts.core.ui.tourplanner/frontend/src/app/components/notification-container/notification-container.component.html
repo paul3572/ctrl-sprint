@@ -1,0 +1,8 @@
+﻿<div class="notification-container">
+  @for (notif of notificationService.notifications(); track notif.id) {
+    <app-notification
+      [notification]="notif"
+      (close)="onClose(notif.id)">
+    </app-notification>
+  }
+</div>
