@@ -1,12 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {NotificationContainerComponent} from './components/notification-container/notification-container.component';
+import { NotificationContainerComponent } from './components/notification-container/notification-container.component';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, NotificationContainerComponent],
   templateUrl: './app.html',
-  styleUrls: ['./app.css'],
+  styleUrls: ['./app.scss'],
 })
 export class App {
   protected readonly title = signal('frontend');

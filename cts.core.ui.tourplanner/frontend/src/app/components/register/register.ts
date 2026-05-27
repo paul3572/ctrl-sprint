@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [RouterLink, FormsModule],
   templateUrl: './register.html',
-  styleUrls: ['../../app.css', './register.css'],
+  styleUrls: ['../../app.scss', './register.scss'],
 })
 export class Register {
   protected readonly AppPaths = AppPaths;

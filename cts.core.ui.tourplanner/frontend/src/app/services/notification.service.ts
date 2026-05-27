@@ -40,7 +40,6 @@ export class NotificationService {
 
     this.notifications.update((n) => [...n, notification]);
 
-    // Auto-remove after duration
     if (duration > 0) {
       setTimeout(() => {
         this.remove(id);

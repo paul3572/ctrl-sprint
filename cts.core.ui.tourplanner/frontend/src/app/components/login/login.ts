@@ -10,7 +10,7 @@ import { NotificationService } from '../../services/notification.service';
   standalone: true,
   imports: [RouterLink, FormsModule],
   templateUrl: './login.html',
-  styleUrls: ['../../app.css', './login.css'],
+  styleUrls: ['../../app.scss', './login.scss'],
 })
 export class Login {
   protected readonly AppPaths = AppPaths;
