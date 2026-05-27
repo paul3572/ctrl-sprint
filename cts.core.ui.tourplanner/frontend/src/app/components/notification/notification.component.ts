@@ -20,7 +20,7 @@ export class NotificationComponent {
   getIcon(): string {
     switch (this.notification.type) {
       case 'error':
-        return '✕';
+        return '⛔';
       case 'success':
         return '✓';
       case 'warning':

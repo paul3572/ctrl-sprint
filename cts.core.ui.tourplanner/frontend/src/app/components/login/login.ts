@@ -22,6 +22,12 @@ export class Login {
   protected password = '';
 
   protected async onLoginClicked() {
+    const success = this.auth.login(this.email, this.password);
+    if (!success) {
+      this.notification.error(this.auth.error() ?? 'Login failed.');
+      return;
+    }
+
     this.notification.success('Successfully logged in!');
     await this.router.navigate([AppPaths.home]);
   }

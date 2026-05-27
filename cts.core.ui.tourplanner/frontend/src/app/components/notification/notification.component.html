@@ -1,12 +1,16 @@
-﻿<div class="notification" [class]="'notification--' + notification.type">
-  <div class="notification-content">
+﻿<div class="notification" [class]="'notification--' + notification.type" role="status" aria-live="polite">
+  <div class="notification-left">
     <span class="notification-icon">{{ getIcon() }}</span>
+  </div>
+
+  <div class="notification-content">
     <p class="notification-message">{{ notification.message }}</p>
   </div>
+
   <button
     class="notification-close"
     (click)="onClose()"
-    aria-label="Close notification">
-    ✕
+    aria-label="Dismiss notification">
+    ×
   </button>
 </div>
