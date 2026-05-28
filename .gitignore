@@ -31,3 +31,40 @@ yarn-error.log*
 .idea/
 .vscode/
 **/obj/
+
+# Local database runtime data
+cts.core.db.tourplanner/runtime/
+cts.core.db.tourplanner/backups/
+
+# Local env files
+cts.core.db.tourplanner/.env.dev
+cts.core.db.tourplanner/.env.prod
+
+# .NET / C# build artefacts
+**/bin/
+**/obj/
+**/TestResults/
+**/artifacts/
+
+# .NET user/local files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+# NuGet packages
+*.nupkg
+*.snupkg
+
+# Visual Studio local folder
+.vs/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment examples allowed
+!.env.example
+!.env.template
