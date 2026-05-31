@@ -24,7 +24,7 @@ export class AppStateService {
     }
 
     const user: User = {
-      guid: this.generateGuid(),
+      userGuid: this.generateGuid(),
       email: normalizedEmail,
       createdAt: new Date(),
     };
@@ -60,7 +60,7 @@ export class AppStateService {
       }
 
       this._user.set({
-        guid: parsed.guid,
+        userGuid: parsed.guid,
         email: parsed.email,
         createdAt: new Date(parsed.createdAt),
       });
@@ -80,7 +80,7 @@ export class AppStateService {
 
     const payload = encodeURIComponent(
       JSON.stringify({
-        guid: user.guid,
+        guid: user.userGuid,
         email: user.email,
         createdAt: user.createdAt.toISOString(),
       }),

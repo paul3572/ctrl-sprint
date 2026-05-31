@@ -1,13 +1,109 @@
 <div class="home-page">
-  <button type="button" (click)="onLogoutClicked()">Logout</button>
+  <header class="home-header">
+    <div class="header-left">
+      <h1>Tour Planner</h1>
+    </div>
+    <button class="logout-btn" type="button" (click)="onLogoutClicked()" aria-label="Logout">
+      Logout
+    </button>
+  </header>
 
-  <h1>My personal Task Manager</h1>
+  <div class="dashboard-grid">
+    <!-- Summary cards -->
+    <section class="summary-cards">
+      <div class="card">
+        <div class="card-label">Total Tours</div>
+        <div class="card-value">{{ totalTours() }}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Tour Logs</div>
+        <div class="card-value">{{ totalLogs() }}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Most Popular</div>
+        <div class="card-value">{{ mostPopularTour() || '—' }}</div>
+      </div>
+    </section>
 
-  <p>
-    This is a simple task manager application built with Angular for the frontend and Spring Boot for the backend. It allows users to create, read, update, and delete tasks. The application is designed to help users organize their tasks and improve productivity.
-  </p>
+    <!-- Search + Create -->
+    <section class="controls">
+      <div class="search-box">
+        <input
+          type="search"
+          placeholder="Search tours..."
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+          name="searchTours"
+          aria-label="Search tours by name or description"
+        />
+      </div>
+      <button class="btn btn-primary" (click)="onCreateTourClicked()" type="button">
+        + New Tour
+      </button>
+    </section>
 
-  <h2>My current tasks</h2>
+    <!-- Tours list -->
+    <section class="tours-section">
+      <h2>Your Tours</h2>
 
-  <h2>New/Selected Task:</h2>
+      @if (loading()) {
+        <div class="loading">Loading tours…</div>
+      } @else if (filteredTours().length === 0) {
+        <div class="empty-state">
+          <p>No tours yet. Create your first tour!</p>
+        </div>
+      } @else {
+        <div class="tours-grid">
+          @for (tour of filteredTours(); track tour.tourGuid) {
+            <article class="tour-card" (click)="onSelectTour(tour.tourGuid)">
+              <h3>{{ tour.name }}</h3>
+              <p class="description">{{ tour.description || 'No description' }}</p>
+
+              <div class="tour-meta">
+                <span
+                  class="badge"
+                  [class.badge-bike]="tour.transportType === Transport.Bike"
+                  [class.badge-foot]="tour.transportType === Transport.Foot"
+                  [class.badge-car]="tour.transportType === Transport.Car"
+                  [class.badge-public]="tour.transportType === Transport.PublicTransport"
+                >
+                  {{ tour.transportType }}
+                </span>
+                <span class="route">{{ tour.from }} → {{ tour.to }}</span>
+              </div>
+
+              <div class="tour-stats">
+                <span>{{ tour.tourDistance }} km</span>
+                <span>•</span>
+                <span>{{ tour.estimatedTimeMinutes }} min</span>
+                <span>•</span>
+                <span>{{ tour.tourLogs.length }} logs</span>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </section>
+  </div>
 </div>
+
+<!-- Create Tour Modal -->
+@if (showCreateModal()) {
+  <div class="modal-overlay" (click)="onCreateModalClosed()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Create New Tour</h2>
+        <button class="modal-close" (click)="onCreateModalClosed()" aria-label="Close modal">
+          ✕
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-tour-form
+          (tourSubmitted)="onTourCreated($event)"
+          (cancelled)="onCreateModalClosed()"
+        ></app-tour-form>
+      </div>
+    </div>
+  </div>
+}
+
