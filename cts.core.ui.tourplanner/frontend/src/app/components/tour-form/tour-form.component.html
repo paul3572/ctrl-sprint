@@ -1,0 +1,106 @@
+﻿<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="name">Tour Name *</label>
+    <input
+      id="name"
+      type="text"
+      formControlName="name"
+      placeholder="e.g., Alpine Hike"
+      class="form-input"
+    />
+    <div class="error" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
+      {{ getErrorMessage('name') }}
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea
+      id="description"
+      formControlName="description"
+      placeholder="Optional tour description..."
+      class="form-textarea"
+      rows="3"
+    ></textarea>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="from">From *</label>
+      <input
+        id="from"
+        type="text"
+        formControlName="from"
+        placeholder="Starting point"
+        class="form-input"
+      />
+      <div class="error" *ngIf="form.get('from')?.touched && form.get('from')?.invalid">
+        {{ getErrorMessage('from') }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="to">To *</label>
+      <input
+        id="to"
+        type="text"
+        formControlName="to"
+        placeholder="Destination"
+        class="form-input"
+      />
+      <div class="error" *ngIf="form.get('to')?.touched && form.get('to')?.invalid">
+        {{ getErrorMessage('to') }}
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="transportType">Transport Type *</label>
+      <select id="transportType" formControlName="transportType" class="form-select">
+        <option *ngFor="let type of transportTypes" [value]="type">
+          {{ type | titlecase }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="tourDistance">Distance (km) *</label>
+      <input
+        id="tourDistance"
+        type="number"
+        step="0.1"
+        formControlName="tourDistance"
+        placeholder="0.0"
+        class="form-input"
+      />
+      <div class="error" *ngIf="form.get('tourDistance')?.touched && form.get('tourDistance')?.invalid">
+        {{ getErrorMessage('tourDistance') }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="estimatedTimeMinutes">Time (min) *</label>
+      <input
+        id="estimatedTimeMinutes"
+        type="number"
+        formControlName="estimatedTimeMinutes"
+        placeholder="0"
+        class="form-input"
+      />
+      <div class="error" *ngIf="form.get('estimatedTimeMinutes')?.touched && form.get('estimatedTimeMinutes')?.invalid">
+        {{ getErrorMessage('estimatedTimeMinutes') }}
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary" [disabled]="submitting()">
+      {{ submitting() ? 'Creating...' : 'Create Tour' }}
+    </button>
+    <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="submitting()">
+      Cancel
+    </button>
+  </div>
+</form>
+
