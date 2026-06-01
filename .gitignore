@@ -33,8 +33,28 @@ yarn-error.log*
 **/obj/
 
 # Local database runtime data
-cts.core.db.tourplanner/runtime/
-cts.core.db.tourplanner/backups/
+# Keep folder structure, ignore generated DB/runtime files
+cts.core.db.tourplanner/runtime/**
+!cts.core.db.tourplanner/runtime/
+!cts.core.db.tourplanner/runtime/**/
+!cts.core.db.tourplanner/runtime/**/.gitkeep
+!cts.core.db.tourplanner/runtime/**/*.example
+
+cts.core.db.tourplanner/backup/**
+!cts.core.db.tourplanner/backup/
+!cts.core.db.tourplanner/backup/**/
+!cts.core.db.tourplanner/backup/**/.gitkeep
+
+cts.core.db.tourplanner/backups/**
+!cts.core.db.tourplanner/backups/
+!cts.core.db.tourplanner/backups/**/
+!cts.core.db.tourplanner/backups/**/.gitkeep
+
+# Local DB secrets
+cts.core.db.tourplanner/.env.dev
+cts.core.db.tourplanner/.env.prod
+cts.core.db.tourplanner/**/*.secrets
+!cts.core.db.tourplanner/**/*.secrets.example
 
 # Local env files
 cts.core.db.tourplanner/.env.dev
