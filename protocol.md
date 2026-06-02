@@ -3,7 +3,7 @@
 ## Start the application
 For the intermediate Hand-In, there is only the frontend-part of the application available.
 
-Therefore, you need to go to `./cts.core.ui.tourplanner/frontend` and run the command `ng serve`.
+Therefore, you need to go to `./cts.core.ui.tourplanner/frontend` and do a `npm install`, then run the command `ng serve`.
 
 Since the Login and Register only create a fake user and a cookie, every Login the userGuid changes, thus making it hard to see the created tours on the same account.
 
