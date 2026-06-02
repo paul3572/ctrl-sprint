@@ -3,6 +3,7 @@ import { TourLog } from './tourLog';
 
 export interface Tour {
   tourGuid: string;
+  userGuid: string;
   name: string;
   description: string;
   from: string;

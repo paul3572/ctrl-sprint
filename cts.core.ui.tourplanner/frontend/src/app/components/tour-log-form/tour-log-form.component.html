@@ -1,0 +1,106 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="tour-log-form">
+  <h3>@if (existingLog) { Edit Tour Log } @else { New Tour Log }</h3>
+
+  <div class="form-group">
+    <label for="dateTime">Date & Time *</label>
+    <input
+      id="dateTime"
+      type="datetime-local"
+      formControlName="dateTime"
+      class="form-input"
+    />
+    @if (form.get('dateTime')?.touched && form.get('dateTime')?.invalid) {
+      <div class="error">{{ getErrorMessage('dateTime') }}</div>
+    }
+  </div>
+
+  <div class="form-group">
+    <label for="comment">Comment</label>
+    <textarea
+      id="comment"
+      formControlName="comment"
+      placeholder="Optional notes about this tour..."
+      class="form-textarea"
+      rows="2"
+    ></textarea>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="difficulty">Difficulty (1-5) *</label>
+      <input
+        id="difficulty"
+        type="number"
+        min="1"
+        max="5"
+        formControlName="difficulty"
+        placeholder="1"
+        class="form-input"
+      />
+      @if (form.get('difficulty')?.touched && form.get('difficulty')?.invalid) {
+        <div class="error">{{ getErrorMessage('difficulty') }}</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="totalDistance">Distance (km) *</label>
+      <input
+        id="totalDistance"
+        type="number"
+        step="0.1"
+        min="0"
+        formControlName="totalDistance"
+        placeholder="0.0"
+        class="form-input"
+      />
+      @if (form.get('totalDistance')?.touched && form.get('totalDistance')?.invalid) {
+        <div class="error">{{ getErrorMessage('totalDistance') }}</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="totalTime">Time (min) *</label>
+      <input
+        id="totalTime"
+        type="number"
+        min="0"
+        formControlName="totalTime"
+        placeholder="0"
+        class="form-input"
+      />
+      @if (form.get('totalTime')?.touched && form.get('totalTime')?.invalid) {
+        <div class="error">{{ getErrorMessage('totalTime') }}</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating (1-5) *</label>
+      <input
+        id="rating"
+        type="number"
+        min="1"
+        max="5"
+        formControlName="rating"
+        placeholder="3"
+        class="form-input"
+      />
+      @if (form.get('rating')?.touched && form.get('rating')?.invalid) {
+        <div class="error">{{ getErrorMessage('rating') }}</div>
+      }
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary" [disabled]="submitting()">
+      @if (submitting()) {
+        @if (existingLog) { Updating... } @else { Creating... }
+      } @else {
+        @if (existingLog) { Update Tour Log } @else { Add Tour Log }
+      }
+    </button>
+    <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="submitting()">
+      Cancel
+    </button>
+  </div>
+</form>
+

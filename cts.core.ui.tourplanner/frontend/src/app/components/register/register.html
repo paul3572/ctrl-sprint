@@ -41,7 +41,10 @@
         <form (ngSubmit)="onRegisterClicked()">
           <div class="form-group">
             <div class="input-wrap">
-              <input id="register-email" name="email" type="email" placeholder=" " [(ngModel)]="email" required />
+              <input id="register-email" name="email" type="email" placeholder=" " [(ngModel)]="email" required #emailModel="ngModel" />
+              @if (emailModel.invalid && emailModel.touched) {
+                <div class="field-error">Please enter a valid email address.</div>
+              }
               <label for="register-email">Email address</label>
               <span class="form-icon">✉</span>
             </div>

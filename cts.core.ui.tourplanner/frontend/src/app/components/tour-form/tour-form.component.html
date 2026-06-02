@@ -1,4 +1,4 @@
-﻿<form [formGroup]="form" (ngSubmit)="onSubmit()">
+﻿<form [formGroup]="form" (ngSubmit)="onSubmit()" #formElement>
   <div class="form-group">
     <label for="name">Tour Name *</label>
     <input
@@ -8,9 +8,11 @@
       placeholder="e.g., Alpine Hike"
       class="form-input"
     />
-    <div class="error" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
-      {{ getErrorMessage('name') }}
-    </div>
+    @if (form.get('name')?.touched && form.get('name')?.invalid) {
+      <div class="error" >
+        {{ getErrorMessage('name') }}
+      </div>
+    }
   </div>
 
   <div class="form-group">
@@ -31,76 +33,82 @@
         id="from"
         type="text"
         formControlName="from"
-        placeholder="Starting point"
+       placeholder="Starting point"
         class="form-input"
-      />
-      <div class="error" *ngIf="form.get('from')?.touched && form.get('from')?.invalid">
-        {{ getErrorMessage('from') }}
-      </div>
-    </div>
+       />
+       @if (form.get('from')?.touched && form.get('from')?.invalid) {
+         <div class="error">{{ getErrorMessage('from') }}</div>
+       }
+     </div>
 
-    <div class="form-group">
-      <label for="to">To *</label>
-      <input
-        id="to"
-        type="text"
-        formControlName="to"
-        placeholder="Destination"
-        class="form-input"
-      />
-      <div class="error" *ngIf="form.get('to')?.touched && form.get('to')?.invalid">
-        {{ getErrorMessage('to') }}
-      </div>
+     <div class="form-group">
+       <label for="to">To *</label>
+       <input
+         id="to"
+         type="text"
+         formControlName="to"
+         placeholder="Destination"
+         class="form-input"
+       />
+       @if (form.get('to')?.touched && form.get('to')?.invalid) {
+         <div class="error">{{ getErrorMessage('to') }}</div>
+       }
     </div>
   </div>
 
   <div class="form-row">
     <div class="form-group">
-      <label for="transportType">Transport Type *</label>
-      <select id="transportType" formControlName="transportType" class="form-select">
-        <option *ngFor="let type of transportTypes" [value]="type">
-          {{ type | titlecase }}
-        </option>
-      </select>
-    </div>
+       <label for="transportType">Transport Type *</label>
+       <select id="transportType" formControlName="transportType" class="form-select">
+         @for (type of transportTypes; track type) {
+           <option [value]="type">
+             {{ type | titlecase }}
+           </option>
+         }
+       </select>
+     </div>
 
-    <div class="form-group">
-      <label for="tourDistance">Distance (km) *</label>
-      <input
-        id="tourDistance"
-        type="number"
-        step="0.1"
-        formControlName="tourDistance"
-        placeholder="0.0"
-        class="form-input"
-      />
-      <div class="error" *ngIf="form.get('tourDistance')?.touched && form.get('tourDistance')?.invalid">
-        {{ getErrorMessage('tourDistance') }}
-      </div>
-    </div>
+     <div class="form-group">
+       <label for="tourDistance">Distance (km) *</label>
+       <input
+         id="tourDistance"
+         type="number"
+         step="0.1"
+         formControlName="tourDistance"
+         placeholder="0.0"
+         class="form-input"
+       />
+       @if (form.get('tourDistance')?.touched && form.get('tourDistance')?.invalid) {
+         <div class="error">{{ getErrorMessage('tourDistance') }}</div>
+       }
+     </div>
 
-    <div class="form-group">
-      <label for="estimatedTimeMinutes">Time (min) *</label>
-      <input
-        id="estimatedTimeMinutes"
-        type="number"
-        formControlName="estimatedTimeMinutes"
-        placeholder="0"
-        class="form-input"
-      />
-      <div class="error" *ngIf="form.get('estimatedTimeMinutes')?.touched && form.get('estimatedTimeMinutes')?.invalid">
-        {{ getErrorMessage('estimatedTimeMinutes') }}
-      </div>
+     <div class="form-group">
+       <label for="estimatedTimeMinutes">Time (min) *</label>
+       <input
+         id="estimatedTimeMinutes"
+         type="number"
+         formControlName="estimatedTimeMinutes"
+         placeholder="0"
+         class="form-input"
+       />
+       @if (form.get('estimatedTimeMinutes')?.touched && form.get('estimatedTimeMinutes')?.invalid) {
+         <div class="error">{{ getErrorMessage('estimatedTimeMinutes') }}</div>
+       }
     </div>
   </div>
 
-  <div class="form-actions">
-    <button type="submit" class="btn btn-primary" [disabled]="submitting()">
-      {{ submitting() ? 'Creating...' : 'Create Tour' }}
-    </button>
-    <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="submitting()">
-      Cancel
-    </button>
-  </div>
+   <div class="form-actions">
+     <button type="submit" class="btn btn-primary" [disabled]="submitting()">
+       @if (submitting()) {
+         Creating...
+       } @else {
+         Create Tour
+       }
+     </button>
+     <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="submitting()">
+       Cancel
+     </button>
+   </div>
 </form>
 

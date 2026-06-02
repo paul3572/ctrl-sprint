@@ -1,5 +1,5 @@
-﻿import { computed, Injectable, signal } from '@angular/core';
-import { User } from '../models/user';
+﻿import {computed, Injectable, signal} from '@angular/core';
+import {User} from '../models/user';
 
 @Injectable({ providedIn: 'root' })
 export class AppStateService {
@@ -20,6 +20,11 @@ export class AppStateService {
     const normalizedEmail = email.trim().toLowerCase();
     if (!normalizedEmail || !password.trim()) {
       this.error.set('Please provide email and password.');
+      return false;
+    }
+
+    if (!this.isValidEmail(normalizedEmail)) {
+      this.error.set('Not a valid email address.');
       return false;
     }
 
@@ -113,6 +118,10 @@ export class AppStateService {
     }
 
     document.cookie = `${AppStateService.SessionCookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;
+  }
+
+  private isValidEmail(email: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   }
 
   private generateGuid(): string {

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { AppStateService } from '../../services/app-state.service';
+import { TourService } from '../../services/tour.service';
 import { NotificationService } from '../../services/notification.service';
 import { TourFormComponent } from '../tour-form/tour-form.component';
 import type { Tour } from '../../models/tour';
@@ -19,91 +20,62 @@ import { Transport } from '../../models/transport';
 export class Home {
   private readonly router = inject(Router);
   private readonly appState = inject(AppStateService);
+  private readonly tourService = inject(TourService);
   private readonly notifications = inject(NotificationService);
 
-  // Local state (searchQuery is writable for two-way binding)
+  // Local state
   readonly searchQuery = signal('');
-  readonly loading = signal(false);
-  readonly tours = signal<Tour[]>([]);
+  readonly loading = computed(() => this.tourService.isLoading());
   readonly showCreateModal = signal(false);
 
   // Derived
   readonly filteredTours = computed(() => {
     const q = this.searchQuery().trim().toLowerCase();
-    if (!q) return this.tours();
-    return this.tours().filter(
+    const tours = this.tourService.userTours();
+    if (!q) return tours;
+    return tours.filter(
       (t) => t.name.toLowerCase().includes(q) || (t.description ?? '').toLowerCase().includes(q),
     );
   });
 
-  readonly totalTours = computed(() => this.tours().length);
+  readonly totalTours = computed(() => this.tourService.userTours().length);
   readonly totalLogs = computed(() =>
-    this.tours().reduce((sum, t) => sum + (t.tourLogs.length ?? 0), 0),
+    this.tourService.userTours().reduce((sum, t) => sum + (t.tourLogs?.length ?? 0), 0),
   );
   readonly mostPopularTour = computed(() => {
-    const tours = this.tours();
+    const tours = this.tourService.userTours();
     if (tours.length === 0) return null;
     return tours.reduce((a, b) => ((a.rating ?? 0) > (b.rating ?? 0) ? a : b)).name;
   });
 
   constructor() {
-    this.loadInitialTours();
+    this.loadToursFromBackend();
 
-    // React to search query changes for side effects if needed
     effect(() => {
       this.searchQuery();
-      // You could add side effects here like analytics, etc.
     });
   }
 
-  async loadInitialTours() {
-    this.loading.set(true);
+  async loadToursFromBackend() {
     try {
-      // Mock tours (replace with TourService call)
-      const mock: Tour[] = [
-        {
-          tourGuid: '00000000-0000-0000-0000-000000000000',
-          name: 'Danube River Bike Tour',
-          description: 'Scenic bike ride along the Danube.',
-          from: 'Vienna City Center',
-          to: 'Greifenstein',
-          transportType: Transport.Bike,
-          tourDistance: 42.5,
-          estimatedTimeMinutes: 180,
-          rating: 3,
-          tourLogs: [],
-        },
-        {
-          tourGuid: '00000000-0000-0000-0000-000000000001',
-          name: 'Alpine Hike',
-          description: 'Challenging hike with mountain views.',
-          from: 'Karsee Lake',
-          to: 'Zugspitze Peak',
-          transportType: Transport.Foot,
-          tourDistance: 16.2,
-          estimatedTimeMinutes: 480,
-          rating: 1,
-          tourLogs: [],
-        },
-      ];
-      await new Promise((res) => setTimeout(res, 300));
-      this.tours.set(mock);
+      await this.tourService.loadToursFromBackend();
     } catch (err: any) {
-      this.notifications.error('Failed to load tours');
-    } finally {
-      this.loading.set(false);
+      this.notifications.error('Failed to load tours from backend');
     }
   }
-
 
   onCreateTourClicked() {
     this.showCreateModal.set(true);
   }
 
   onTourCreated(tour: Tour) {
-    this.tours.update((tours) => [tour, ...tours]);
-    this.showCreateModal.set(false);
-    this.notifications.success(`Tour "${tour.name}" created successfully!`);
+    try {
+      this.tourService.addTour(tour);
+      this.showCreateModal.set(false);
+      this.notifications.success(`Tour "${tour.name}" created successfully!`);
+    } catch (err: any) {
+      this.notifications.error(err.message || 'Failed to create tour');
+    }
   }
 
   onCreateModalClosed() {
@@ -111,7 +83,7 @@ export class Home {
   }
 
   onSelectTour(tourGuid: string) {
-    this.router.navigate(['/tours', tourGuid]);
+    this.router.navigate(['/tour', tourGuid]);
   }
 
   async onLogoutClicked() {

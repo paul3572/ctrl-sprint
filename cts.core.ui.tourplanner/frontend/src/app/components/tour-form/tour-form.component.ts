@@ -1,4 +1,4 @@
-﻿import { Component, EventEmitter, Input, Output, inject, signal } from '@angular/core';
+﻿import { Component, EventEmitter, HostListener, Input, Output, ViewChild, ElementRef, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Tour } from '../../models/tour';
@@ -17,6 +17,7 @@ export class TourFormComponent {
   @Input() isModal = true;
   @Output() tourSubmitted = new EventEmitter<Tour>();
   @Output() cancelled = new EventEmitter<void>();
+  @ViewChild('formElement') formElement?: ElementRef<HTMLFormElement>;
 
   readonly submitting = signal(false);
 
@@ -36,6 +37,13 @@ export class TourFormComponent {
     });
   }
 
+  @HostListener('keydown.escape')
+  onEscapeKey(): void {
+    if (this.isModal) {
+      this.onCancel();
+    }
+  }
+
   async onSubmit() {
     if (this.form.invalid) {
       this.markFormGroupTouched(this.form);
@@ -46,6 +54,7 @@ export class TourFormComponent {
     try {
       const newTour: Tour = {
         tourGuid: crypto.randomUUID(),
+        userGuid: '', // Will be set by TourService.addTour()
         name: this.form.value.name,
         description: this.form.value.description,
         from: this.form.value.from,
