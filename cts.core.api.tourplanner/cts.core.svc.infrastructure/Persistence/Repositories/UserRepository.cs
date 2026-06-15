@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TourPlanner.Application.Abstractions.Persistence;
-using TourPlanner.Domain.Users;
+﻿using cts.core.svc.application.Abstractions.Persistence;
+using cts.core.svc.contracts.Users;
+using Microsoft.EntityFrameworkCore;
 
-namespace TourPlanner.Infrastructure.Persistence.Repositories;
+namespace cts.core.svc.infrastructure.Persistence.Repositories;
 
 internal sealed class UserRepository : IUserRepository
 {

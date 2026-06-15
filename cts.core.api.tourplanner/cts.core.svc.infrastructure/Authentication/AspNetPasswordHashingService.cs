@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
-using TourPlanner.Application.Abstractions.Authentication;
+﻿using cts.core.svc.application.Abstractions.Authentication;
+using Microsoft.AspNetCore.Identity;
 
-namespace TourPlanner.Infrastructure.Authentication;
+namespace cts.core.svc.infrastructure.Authentication;
 
 internal sealed class AspNetPasswordHashingService : IPasswordHashingService
 {

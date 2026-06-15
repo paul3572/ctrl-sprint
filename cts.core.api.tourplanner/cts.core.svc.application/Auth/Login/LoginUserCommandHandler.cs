@@ -1,9 +1,9 @@
-﻿using TourPlanner.Application.Abstractions.Authentication;
-using TourPlanner.Application.Abstractions.Persistence;
-using TourPlanner.Application.Auth.Exceptions;
-using TourPlanner.Domain.Users;
+﻿using cts.core.svc.application.Abstractions.Authentication;
+using cts.core.svc.application.Abstractions.Persistence;
+using cts.core.svc.application.Auth.Exceptions;
+using cts.core.svc.contracts.Users;
 
-namespace TourPlanner.Application.Auth.Login;
+namespace cts.core.svc.application.Auth.Login;
 
 public sealed class LoginUserCommandHandler
 {

@@ -1,4 +1,4 @@
-﻿namespace TourPlanner.Application.Abstractions.Persistence;
+﻿namespace cts.core.svc.application.Abstractions.Persistence;
 
 public interface IUnitOfWork
 {

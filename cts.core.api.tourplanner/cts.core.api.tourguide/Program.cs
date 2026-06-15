@@ -1,9 +1,9 @@
 using System.Text;
+using cts.core.svc.application;
+using cts.core.svc.infrastructure;
+using cts.core.svc.infrastructure.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using TourPlanner.Application;
-using TourPlanner.Infrastructure;
-using TourPlanner.Infrastructure.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 

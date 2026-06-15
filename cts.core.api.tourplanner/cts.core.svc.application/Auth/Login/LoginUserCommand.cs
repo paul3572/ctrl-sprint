@@ -1,4 +1,4 @@
-﻿namespace TourPlanner.Application.Auth.Login;
+﻿namespace cts.core.svc.application.Auth.Login;
 
 public sealed record LoginUserCommand(
     string Email,

@@ -1,15 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using cts.core.svc.application.Abstractions.Authentication;
+using cts.core.svc.application.Abstractions.Persistence;
+using cts.core.svc.application.Abstractions.Time;
+using cts.core.svc.infrastructure.Authentication;
+using cts.core.svc.infrastructure.Persistence;
+using cts.core.svc.infrastructure.Persistence.Repositories;
+using cts.core.svc.infrastructure.Time;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TourPlanner.Application.Abstractions.Authentication;
-using TourPlanner.Application.Abstractions.Persistence;
-using TourPlanner.Application.Abstractions.Time;
-using TourPlanner.Infrastructure.Authentication;
-using TourPlanner.Infrastructure.Persistence;
-using TourPlanner.Infrastructure.Persistence.Repositories;
-using TourPlanner.Infrastructure.Time;
 
-namespace TourPlanner.Infrastructure;
+namespace cts.core.svc.infrastructure;
 
 public static class DependencyInjection
 {

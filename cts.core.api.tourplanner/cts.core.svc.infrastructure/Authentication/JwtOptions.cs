@@ -1,4 +1,4 @@
-﻿namespace TourPlanner.Infrastructure.Authentication;
+﻿namespace cts.core.svc.infrastructure.Authentication;
 
 public sealed class JwtOptions
 {

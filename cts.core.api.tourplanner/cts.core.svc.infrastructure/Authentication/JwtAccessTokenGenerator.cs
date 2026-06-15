@@ -1,13 +1,13 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using cts.core.svc.application.Abstractions.Authentication;
+using cts.core.svc.application.Abstractions.Time;
+using cts.core.svc.contracts.Users;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using TourPlanner.Application.Abstractions.Authentication;
-using TourPlanner.Application.Abstractions.Time;
-using TourPlanner.Domain.Users;
 
-namespace TourPlanner.Infrastructure.Authentication;
+namespace cts.core.svc.infrastructure.Authentication;
 
 internal sealed class JwtAccessTokenGenerator : IAccessTokenGenerator
 {

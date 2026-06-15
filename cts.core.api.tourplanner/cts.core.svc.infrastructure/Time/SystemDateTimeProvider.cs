@@ -1,6 +1,6 @@
-﻿using TourPlanner.Application.Abstractions.Time;
+﻿using cts.core.svc.application.Abstractions.Time;
 
-namespace TourPlanner.Infrastructure.Time;
+namespace cts.core.svc.infrastructure.Time;
 
 internal sealed class SystemDateTimeProvider : IDateTimeProvider
 {

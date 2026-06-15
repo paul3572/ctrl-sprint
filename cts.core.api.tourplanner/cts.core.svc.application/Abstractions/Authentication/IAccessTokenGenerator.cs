@@ -1,6 +1,6 @@
-﻿using TourPlanner.Domain.Users;
+﻿using cts.core.svc.contracts.Users;
 
-namespace TourPlanner.Application.Abstractions.Authentication;
+namespace cts.core.svc.application.Abstractions.Authentication;
 
 public interface IAccessTokenGenerator
 {

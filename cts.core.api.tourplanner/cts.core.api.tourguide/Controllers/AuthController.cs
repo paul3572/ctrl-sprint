@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using cts.core.svc.application.Auth;
+using cts.core.svc.application.Auth.Exceptions;
+using cts.core.svc.application.Auth.Login;
+using cts.core.svc.application.Auth.Register;
+using cts.core.svc.contracts.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TourPlanner.Application.Auth;
-using TourPlanner.Application.Auth.Exceptions;
-using TourPlanner.Application.Auth.Login;
-using TourPlanner.Application.Auth.Register;
-using TourPlanner.Contracts.Auth;
 
-namespace TourPlanner.Api.Controllers;
+namespace TourGuideApplication.Controllers;
 
 [ApiController]
 [Route("api/auth")]

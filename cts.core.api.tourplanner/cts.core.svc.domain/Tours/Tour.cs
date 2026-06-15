@@ -1,4 +1,4 @@
-﻿namespace TourPlanner.Domain.Tours;
+﻿namespace cts.core.svc.contracts.Tours;
 
 public sealed class Tour
 {

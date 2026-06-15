@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using cts.core.svc.contracts.Users;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TourPlanner.Domain.Users;
 
-namespace TourPlanner.Infrastructure.Persistence.Configurations;
+namespace cts.core.svc.infrastructure.Persistence.Configurations;
 
 internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
 {

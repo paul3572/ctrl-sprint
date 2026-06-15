@@ -1,4 +1,4 @@
-﻿namespace TourPlanner.Application.Abstractions.Authentication;
+﻿namespace cts.core.svc.application.Abstractions.Authentication;
 
 public interface IPasswordHashingService
 {

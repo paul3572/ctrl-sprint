@@ -1,4 +1,4 @@
-﻿namespace TourPlanner.Contracts.Auth;
+﻿namespace cts.core.svc.contracts.Auth;
 
 public sealed class AuthResponse
 {

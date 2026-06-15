@@ -1,4 +1,4 @@
-﻿namespace TourPlanner.Application.Auth;
+﻿namespace cts.core.svc.application.Auth;
 
 public sealed record AuthenticationResult(
     Guid UserId,

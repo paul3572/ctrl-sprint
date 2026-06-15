@@ -1,4 +1,4 @@
-﻿namespace TourPlanner.Application.Auth.Exceptions;
+﻿namespace cts.core.svc.application.Auth.Exceptions;
 
 public sealed class PasswordPolicyViolationException : Exception
 {

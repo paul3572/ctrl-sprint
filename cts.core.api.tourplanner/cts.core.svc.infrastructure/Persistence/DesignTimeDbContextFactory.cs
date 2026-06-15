@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace TourPlanner.Infrastructure.Persistence;
+namespace cts.core.svc.infrastructure.Persistence;
 
 public sealed class DesignTimeDbContextFactory
     : IDesignTimeDbContextFactory<TourPlannerDbContext>

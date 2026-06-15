@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using TourPlanner.Application.Auth.Login;
-using TourPlanner.Application.Auth.Register;
+﻿using cts.core.svc.application.Auth.Login;
+using cts.core.svc.application.Auth.Register;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace TourPlanner.Application;
+namespace cts.core.svc.application;
 
 public static class DependencyInjection
 {

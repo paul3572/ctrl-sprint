@@ -1,4 +1,4 @@
-﻿namespace TourPlanner.Application.Abstractions.Time;
+﻿namespace cts.core.svc.application.Abstractions.Time;
 
 public interface IDateTimeProvider
 {

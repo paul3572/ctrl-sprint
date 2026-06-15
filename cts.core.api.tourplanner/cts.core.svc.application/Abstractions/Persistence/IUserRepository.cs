@@ -1,6 +1,6 @@
-﻿using TourPlanner.Domain.Users;
+﻿using cts.core.svc.contracts.Users;
 
-namespace TourPlanner.Application.Abstractions.Persistence;
+namespace cts.core.svc.application.Abstractions.Persistence;
 
 public interface IUserRepository
 {

@@ -1,6 +1,6 @@
 ﻿using System.Net.Mail;
 
-namespace TourPlanner.Domain.Users;
+namespace cts.core.svc.contracts.Users;
 
 public sealed class User
 {
