@@ -1,7 +1,7 @@
 ﻿using cts.core.svc.application.Abstractions.Authentication;
 using cts.core.svc.application.Abstractions.Persistence;
 using cts.core.svc.application.Auth.Exceptions;
-using cts.core.svc.contracts.Users;
+using cts.core.svc.contracts;
 
 namespace cts.core.svc.application.Auth.Login;
 
@@ -43,7 +43,7 @@ public sealed class LoginUserCommandHandler
         AccessToken accessToken = _accessTokenGenerator.Generate(user);
 
         return new AuthenticationResult(
-            user.Id,
+            user.UserGuid,
             user.Email,
             user.DisplayName,
             accessToken.Value,

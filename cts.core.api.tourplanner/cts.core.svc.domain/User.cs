@@ -1,41 +1,44 @@
-﻿using System.Net.Mail;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Net.Mail;
 
-namespace cts.core.svc.contracts.Users;
+namespace cts.core.svc.contracts;
 
-public sealed class User
+public class User
 {
-    private User()
-    {
-        // Required by EF Core
-    }
-
-    private User(
-        Guid id,
+    public User(
         string email,
-        string normalizedEmail,
-        string displayName,
         string passwordHash,
+        string salt,
         DateTimeOffset createdAtUtc)
     {
-        Id = id;
-        Email = email;
-        NormalizedEmail = normalizedEmail;
-        DisplayName = displayName;
-        PasswordHash = passwordHash;
-        CreatedAtUtc = createdAtUtc;
+        this.Email = email;
+        this.PasswordHash = passwordHash;
+        this.Salt = salt;
+        this.CreatedAtUtc = createdAtUtc;
     }
+    
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    private User() { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
-    public Guid Id { get; private set; }
-
+    [Key]
+    public int UserId { get; private set; }
+    
+    public Guid UserGuid { get; private set; }
+    
     public string Email { get; private set; } = string.Empty;
-
-    public string NormalizedEmail { get; private set; } = string.Empty;
 
     public string DisplayName { get; private set; } = string.Empty;
 
     public string PasswordHash { get; private set; } = string.Empty;
+    
+    public string Salt {get; private set;} = string.Empty;
 
     public DateTimeOffset CreatedAtUtc { get; private set; }
+
+    private List<Tour> tours = [];
+
+    public virtual IReadOnlyList<Tour> Tours => tours;
 
     public static User Create(
         string email,
@@ -66,9 +69,7 @@ public sealed class User
         }
 
         return new User(
-            Guid.NewGuid(),
             trimmedEmail,
-            NormalizeEmail(trimmedEmail),
             displayName.Trim(),
             passwordHash,
             createdAtUtc);

@@ -1,5 +1,5 @@
 ﻿using cts.core.svc.application.Abstractions.Persistence;
-using cts.core.svc.contracts.Users;
+using cts.core.svc.contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace cts.core.svc.infrastructure.Persistence.Repositories;
@@ -13,13 +13,13 @@ internal sealed class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public Task<User?> GetByNormalizedEmailAsync(
+    public async Task<User?> GetByNormalizedEmailAsync(
         string normalizedEmail,
         CancellationToken cancellationToken)
     {
-        return _dbContext.Users
+        return await _dbContext.Users
             .FirstOrDefaultAsync(
-                user => user.NormalizedEmail == normalizedEmail,
+                user => user.Email == normalizedEmail,
                 cancellationToken);
     }
 
@@ -29,7 +29,7 @@ internal sealed class UserRepository : IUserRepository
     {
         return _dbContext.Users
             .AnyAsync(
-                user => user.NormalizedEmail == normalizedEmail,
+                user => user.Email == normalizedEmail,
                 cancellationToken);
     }
 

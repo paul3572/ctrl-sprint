@@ -2,6 +2,7 @@ using System.Text;
 using cts.core.svc.application;
 using cts.core.svc.infrastructure;
 using cts.core.svc.infrastructure.Authentication;
+using cts.core.svc.infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -53,6 +54,14 @@ builder.Services
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    using (var db = scope.ServiceProvider.GetRequiredService<TourPlannerDbContext>())
+    {
+        db.Initialize(deleteDatabase: true);
+    }
+}
 
 app.UseAuthentication();
 app.UseAuthorization();

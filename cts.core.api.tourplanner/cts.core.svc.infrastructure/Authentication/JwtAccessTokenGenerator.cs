@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using cts.core.svc.application.Abstractions.Authentication;
 using cts.core.svc.application.Abstractions.Time;
-using cts.core.svc.contracts.Users;
+using cts.core.svc.contracts;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -29,9 +29,9 @@ internal sealed class JwtAccessTokenGenerator : IAccessTokenGenerator
 
         Claim[] claims =
         [
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Sub, user.UserGuid.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, user.UserGuid.ToString()),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(ClaimTypes.Name, user.DisplayName)
         ];

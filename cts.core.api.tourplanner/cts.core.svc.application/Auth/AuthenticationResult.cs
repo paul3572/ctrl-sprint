@@ -1,7 +1,7 @@
 ﻿namespace cts.core.svc.application.Auth;
 
 public sealed record AuthenticationResult(
-    Guid UserId,
+    Guid UserGuid,
     string Email,
     string DisplayName,
     string AccessToken,

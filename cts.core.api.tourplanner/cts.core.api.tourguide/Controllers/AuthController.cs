@@ -95,7 +95,7 @@ public sealed class AuthController : ControllerBase
     {
         return new AuthResponse
         {
-            UserId = result.UserId,
+            UserId = result.UserGuid,
             Email = result.Email,
             DisplayName = result.DisplayName,
             AccessToken = result.AccessToken,

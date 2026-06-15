@@ -2,7 +2,7 @@
 using cts.core.svc.application.Abstractions.Persistence;
 using cts.core.svc.application.Abstractions.Time;
 using cts.core.svc.application.Auth.Exceptions;
-using cts.core.svc.contracts.Users;
+using cts.core.svc.contracts;
 
 namespace cts.core.svc.application.Auth.Register;
 
@@ -60,7 +60,7 @@ public sealed class RegisterUserCommandHandler
         AccessToken accessToken = _accessTokenGenerator.Generate(user);
 
         return new AuthenticationResult(
-            user.Id,
+            user.UserGuid,
             user.Email,
             user.DisplayName,
             accessToken.Value,

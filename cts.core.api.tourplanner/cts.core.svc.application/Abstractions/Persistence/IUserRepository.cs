@@ -1,4 +1,4 @@
-﻿using cts.core.svc.contracts.Users;
+﻿using cts.core.svc.contracts;
 
 namespace cts.core.svc.application.Abstractions.Persistence;
 
