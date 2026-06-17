@@ -17,6 +17,6 @@ public class Transport
     public int TransportId { get; private set; }
     public string Name { get; private set; } = string.Empty;
 
-    private List<Tour> tours;
+    private List<Tour> tours = [];
     public IReadOnlyList<Tour> Tours => tours;
 }
