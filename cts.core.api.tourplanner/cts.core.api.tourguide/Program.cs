@@ -4,11 +4,19 @@ using cts.core.svc.infrastructure;
 using cts.core.svc.infrastructure.Authentication;
 using cts.core.svc.infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<TourPlannerDbContext>(opt =>
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("Default"),
+        o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)));
+
 builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -61,6 +69,12 @@ using (var scope = app.Services.CreateScope())
     {
         db.Initialize(deleteDatabase: true);
     }
+}
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseAuthentication();
