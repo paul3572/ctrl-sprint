@@ -31,11 +31,7 @@ public sealed class LoginUserCommandHandler
             normalizedEmail,
             cancellationToken) ?? throw new InvalidCredentialsException();
 
-        bool passwordIsValid = _passwordHashingService.VerifyPassword(
-            user.PasswordHash,
-            command.Password);
-
-        if (!passwordIsValid)
+        if (!user.CheckPassword(command.Password))
         {
             throw new InvalidCredentialsException();
         }

@@ -12,7 +12,7 @@ public class User
         DateTime createdAtUtc)
     {
         this.UserGuid = Guid.NewGuid();
-        this.SetEmail(email);
+        this.SetEmail(NormalizeEmail(email));
         this.SetPassword(passwordHash);
         this.CreatedAtUtc = createdAtUtc;
     }
@@ -91,6 +91,8 @@ public class User
         this.Salt = this.GenerateRandomSalt();
         this.PasswordHash = this.CalculateHash(password, Salt);
     }
+    
+    public bool CheckPassword(string password) => PasswordHash == CalculateHash(password, Salt ?? string.Empty);
     
     /// <summary>
     /// Generates a random number with the given length of bits.
