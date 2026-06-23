@@ -19,4 +19,11 @@ public class TransportRepository(TourPlannerDbContext dbContext) : ITransportRep
             .Where(t => t.TransportId == id)
             .FirstOrDefaultAsync();
     }
+
+    public async Task<Transport?> GetTransportTypeByName(string name)
+    {
+        return await dbContext.Transports
+            .Where(t => t.Name == name)
+            .FirstOrDefaultAsync();
+    }
 }

@@ -7,4 +7,6 @@ public interface ITransportRepository
     Task<List<Transport>> GetAllTransportTypes();
     
     Task<Transport?> GetTransportTypeById(int id);
+    
+    Task<Transport?> GetTransportTypeByName(string name);
 }

@@ -33,6 +33,7 @@ public static class DependencyInjection
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITransportRepository, TransportRepository>();
+        services.AddScoped<ITourRepository, TourRepository>();
 
         services.AddScoped<IUnitOfWork>(provider =>
             provider.GetRequiredService<TourPlannerDbContext>());

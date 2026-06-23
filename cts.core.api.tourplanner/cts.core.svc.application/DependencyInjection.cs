@@ -13,6 +13,7 @@ public static class DependencyInjection
         services.AddScoped<RegisterAuthService>();
         services.AddScoped<LoginAuthService>();
         services.AddScoped<ITransportService, TransportService>();
+        services.AddScoped<ITourService, TourService>();
 
         return services;
     }
