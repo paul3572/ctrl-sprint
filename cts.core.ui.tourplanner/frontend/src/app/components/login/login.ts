@@ -22,7 +22,7 @@ export class Login {
   protected password = '';
 
   protected async onLoginClicked() {
-    const success = this.auth.login(this.email, this.password);
+    const success = await this.auth.login(this.email, this.password);
     if (!success) {
       this.notification.error(this.auth.error() ?? 'Login failed.');
       return;

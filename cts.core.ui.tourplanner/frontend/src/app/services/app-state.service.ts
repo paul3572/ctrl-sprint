@@ -1,5 +1,5 @@
-﻿import {computed, Injectable, signal} from '@angular/core';
-import {User} from '../models/user';
+﻿import { computed, Injectable, signal } from '@angular/core';
+import { User } from '../models/user';
 import { firstValueFrom } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { LoginResponse } from '../contracts/LoginResponse';
@@ -34,7 +34,7 @@ export class AppStateService {
       const user: User = {
         userGuid: response.userGuid,
         email: response.email,
-        createdAt: response.createdAt,
+        createdAt: new Date(response.createdAt),
       };
 
       this._user.set(user);
@@ -61,7 +61,8 @@ export class AppStateService {
     try {
       const response = await firstValueFrom(
         this.http.post<LoginResponse>('/api/auth/register', {
-          email, password,
+          email,
+          password,
         }),
       );
 
@@ -166,17 +167,5 @@ export class AppStateService {
     }
 
     document.cookie = `${AppStateService.SessionCookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;
-  }
-
-  private isValidEmail(email: string): boolean {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-  }
-
-  private generateGuid(): string {
-    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-      return crypto.randomUUID();
-    }
-
-    return `user-${Date.now()}`;
   }
 }
