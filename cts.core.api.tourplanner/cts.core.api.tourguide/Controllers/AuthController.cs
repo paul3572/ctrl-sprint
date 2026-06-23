@@ -5,6 +5,8 @@ using cts.core.svc.application.Auth.Register;
 using cts.core.svc.contracts.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace TourGuideApplication.Controllers;
 
@@ -34,20 +36,35 @@ public sealed class AuthController : ControllerBase
             AuthenticationResult result = await _registerUserCommandHandler.HandleAsync(
                 new RegisterUserCommand(
                     request.Email,
-                    request.DisplayName,
                     request.Password),
                 cancellationToken);
 
             return Ok(ToResponse(result));
         }
-        catch (EmailAlreadyRegisteredException exception)
+        catch (DbUpdateException exception)
         {
-            return Conflict(new ProblemDetails
+            if (exception.InnerException is PostgresException pg)
             {
-                Status = StatusCodes.Status409Conflict,
-                Title = "Email already registered",
-                Detail = exception.Message
-            });
+                return pg.SqlState switch
+                {
+                    "23505" => Conflict(new ProblemDetails
+                    {
+                        Title = "Duplicate key",
+                        Status = 409,
+                        Detail = "Email already exists."
+                    }),
+                    "23503" => Conflict(new ProblemDetails
+                    {
+                        Title = "Foreign key violation",
+                        Status = 409,
+                        Detail = "Referenced entity does not exist."
+                    }),
+
+                    _ => Problem(detail: pg.MessageText)
+                };
+            }
+
+            return Problem(detail: exception.Message);
         }
         catch (PasswordPolicyViolationException exception)
         {
@@ -59,7 +76,7 @@ public sealed class AuthController : ControllerBase
             {
                 Status = StatusCodes.Status400BadRequest,
                 Title = "Password policy violation",
-                Detail = exception.Message
+                Detail = "Password needs to be at least 8 characters long."
             });
         }
     }
@@ -97,7 +114,7 @@ public sealed class AuthController : ControllerBase
         {
             UserId = result.UserGuid,
             Email = result.Email,
-            DisplayName = result.DisplayName,
+            CreatedAt = result.CreatedAt,
             AccessToken = result.AccessToken,
             AccessTokenExpiresAtUtc = result.AccessTokenExpiresAtUtc
         };

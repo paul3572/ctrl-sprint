@@ -18,16 +18,12 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         string connectionString = configuration.GetConnectionString("Default")
-                                  ?? throw new InvalidOperationException("Connection string 'Default' is missing.");
+                                  ?? throw new InvalidOperationException(
+                                      "Connection string 'Default' is missing.");
 
         services.AddDbContext<TourPlannerDbContext>(options =>
         {
-            options.UseNpgsql(
-                connectionString,
-                npgsqlOptions =>
-                {
-                    npgsqlOptions.MigrationsHistoryTable("__ef_migrations_history", "app");
-                });
+            options.UseNpgsql(connectionString);
         });
 
         services.Configure<JwtOptions>(

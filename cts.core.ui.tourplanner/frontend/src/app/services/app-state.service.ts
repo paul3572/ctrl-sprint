@@ -1,5 +1,8 @@
 ﻿import {computed, Injectable, signal} from '@angular/core';
 import {User} from '../models/user';
+import { firstValueFrom } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { LoginResponse } from '../contracts/LoginResponse';
 
 @Injectable({ providedIn: 'root' })
 export class AppStateService {
@@ -12,36 +15,77 @@ export class AppStateService {
   readonly isLoading = signal(false);
   readonly error = signal<string | null>(null);
 
-  constructor() {
+  constructor(private readonly http: HttpClient) {
     this.hydrateFromCookie();
   }
 
-  login(email: string, password: string): boolean {
-    const normalizedEmail = email.trim().toLowerCase();
-    if (!normalizedEmail || !password.trim()) {
-      this.error.set('Please provide email and password.');
-      return false;
-    }
-
-    if (!this.isValidEmail(normalizedEmail)) {
-      this.error.set('Not a valid email address.');
-      return false;
-    }
-
-    const user: User = {
-      userGuid: this.generateGuid(),
-      email: normalizedEmail,
-      createdAt: new Date(),
-    };
-
-    this._user.set(user);
+  async login(email: string, password: string): Promise<boolean> {
+    this.isLoading.set(true);
     this.error.set(null);
-    this.persistToCookie(user);
-    return true;
+
+    try {
+      const response = await firstValueFrom(
+        this.http.post<LoginResponse>('/api/auth/login', {
+          email,
+          password,
+        }),
+      );
+
+      const user: User = {
+        userGuid: response.userGuid,
+        email: response.email,
+        createdAt: response.createdAt,
+      };
+
+      this._user.set(user);
+      this.persistToCookie(user);
+
+      return true;
+    } catch (error) {
+      if (error instanceof HttpErrorResponse) {
+        this.error.set(error.error?.detail ?? error.message);
+      } else {
+        this.error.set('An unknown error occurred.');
+      }
+
+      return false;
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
-  register(email: string, password: string): boolean {
-    return this.login(email, password);
+  async register(email: string, password: string): Promise<boolean> {
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    try {
+      const response = await firstValueFrom(
+        this.http.post<LoginResponse>('/api/auth/register', {
+          email, password,
+        }),
+      );
+
+      const user: User = {
+        userGuid: response.userGuid,
+        email: response.email,
+        createdAt: response.createdAt,
+      };
+
+      this._user.set(user);
+      this.persistToCookie(user);
+
+      return true;
+    } catch (error) {
+      if (error instanceof HttpErrorResponse) {
+        this.error.set(error.error?.detail ?? error.message);
+      } else {
+        this.error.set('An unknown error occurred.');
+      }
+
+      return false;
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   logout(): void {

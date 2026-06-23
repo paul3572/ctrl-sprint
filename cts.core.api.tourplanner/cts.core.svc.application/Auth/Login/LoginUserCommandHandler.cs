@@ -45,7 +45,7 @@ public sealed class LoginUserCommandHandler
         return new AuthenticationResult(
             user.UserGuid,
             user.Email,
-            user.DisplayName,
+            user.CreatedAtUtc,
             accessToken.Value,
             accessToken.ExpiresAtUtc);
     }

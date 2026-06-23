@@ -17,7 +17,7 @@ export class AuthInterceptor implements HttpInterceptor {
   private router = inject(Router);
   private auth = inject(AppStateService);
 
-  private readonly apiBase = 'http://localhost:3000';
+  private readonly apiBase = 'http://localhost:8080';
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (!req.url.startsWith('http')) {

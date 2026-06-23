@@ -49,9 +49,8 @@ public sealed class RegisterUserCommandHandler
 
         User user = User.Create(
             command.Email,
-            command.DisplayName,
             passwordHash,
-            _dateTimeProvider.UtcNow);
+            DateTime.UtcNow);
 
         await _userRepository.AddAsync(user, cancellationToken);
 
@@ -62,7 +61,7 @@ public sealed class RegisterUserCommandHandler
         return new AuthenticationResult(
             user.UserGuid,
             user.Email,
-            user.DisplayName,
+            user.CreatedAtUtc,
             accessToken.Value,
             accessToken.ExpiresAtUtc);
     }

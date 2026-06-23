@@ -3,7 +3,7 @@
 public sealed record AuthenticationResult(
     Guid UserGuid,
     string Email,
-    string DisplayName,
+    DateTime CreatedAt,
     string AccessToken,
     DateTimeOffset AccessTokenExpiresAtUtc);
     

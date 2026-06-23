@@ -33,7 +33,6 @@ internal sealed class JwtAccessTokenGenerator : IAccessTokenGenerator
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
             new Claim(ClaimTypes.NameIdentifier, user.UserGuid.ToString()),
             new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Name, user.DisplayName)
         ];
 
         SymmetricSecurityKey securityKey = new(
