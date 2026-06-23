@@ -1,4 +1,5 @@
 ﻿using cts.core.svc.application.Interfaces;
+using cts.core.svc.contracts;
 using cts.core.svc.contracts.Tours;
 using Microsoft.AspNetCore.Mvc;
 using TourGuideApplication.Interfaces;
@@ -31,6 +32,9 @@ public class TourController : ControllerBase, ITourController
         }
     }
 
+    [HttpGet("{tourGuid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TourDto>> GetTour(Guid tourGuid)
     {
         try
@@ -43,11 +47,15 @@ public class TourController : ControllerBase, ITourController
         }
     }
 
-    public async Task<ActionResult<Guid>> CreateTour(Guid userGuid, TourCmd tour)
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<GuidDto>> CreateTour(Guid userGuid, TourCmd tour)
     {
         try
         {
-            return Ok(await this.tourService.CreateTour(userGuid, tour));
+            var createdTour = await this.tourService.CreateTour(userGuid, tour);
+            return Ok(new GuidDto(createdTour.Value));
         }
         catch  (Exception ex)
         {
@@ -55,11 +63,15 @@ public class TourController : ControllerBase, ITourController
         }
     }
 
-    public async Task<ActionResult<Guid>> UpdateTour(Guid tourGuid, TourCmd tour)
+    [HttpPatch("{tourGuid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<GuidDto>> UpdateTour(Guid tourGuid, TourCmd tour)
     {
         try
         {
-            return Ok(await this.tourService.UpdateTour(tourGuid, tour));
+            var updatedTour = await this.tourService.UpdateTour(tourGuid, tour);
+            return Ok(new GuidDto(updatedTour.Value));
         }
         catch  (Exception ex)
         {
@@ -67,6 +79,9 @@ public class TourController : ControllerBase, ITourController
         }
     }
 
+    [HttpDelete("{tourGuid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<string>> DeleteTour(Guid tourGuid)
     {
         try
