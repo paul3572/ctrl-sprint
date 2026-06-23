@@ -1,31 +1,24 @@
 ﻿using cts.core.svc.application.Abstractions.Authentication;
 using cts.core.svc.application.Abstractions.Persistence;
-using cts.core.svc.application.Abstractions.Time;
 using cts.core.svc.application.Auth.Exceptions;
 using cts.core.svc.contracts;
 
 namespace cts.core.svc.application.Auth.Register;
 
-public sealed class RegisterUserCommandHandler
+public sealed class RegisterAuthService
 {
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IPasswordHashingService _passwordHashingService;
     private readonly IAccessTokenGenerator _accessTokenGenerator;
-    private readonly IDateTimeProvider _dateTimeProvider;
 
-    public RegisterUserCommandHandler(
+    public RegisterAuthService(
         IUserRepository userRepository,
         IUnitOfWork unitOfWork,
-        IPasswordHashingService passwordHashingService,
-        IAccessTokenGenerator accessTokenGenerator,
-        IDateTimeProvider dateTimeProvider)
+        IAccessTokenGenerator accessTokenGenerator)
     {
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
-        _passwordHashingService = passwordHashingService;
         _accessTokenGenerator = accessTokenGenerator;
-        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<AuthenticationResult> HandleAsync(
@@ -45,11 +38,9 @@ public sealed class RegisterUserCommandHandler
             throw new EmailAlreadyRegisteredException();
         }
 
-        string passwordHash = _passwordHashingService.HashPassword(command.Password);
-
         User user = User.Create(
             command.Email,
-            passwordHash,
+            command.Password,
             DateTime.UtcNow);
 
         await _userRepository.AddAsync(user, cancellationToken);

@@ -5,19 +5,16 @@ using cts.core.svc.contracts;
 
 namespace cts.core.svc.application.Auth.Login;
 
-public sealed class LoginUserCommandHandler
+public sealed class LoginAuthService
 {
     private readonly IUserRepository _userRepository;
-    private readonly IPasswordHashingService _passwordHashingService;
     private readonly IAccessTokenGenerator _accessTokenGenerator;
 
-    public LoginUserCommandHandler(
+    public LoginAuthService(
         IUserRepository userRepository,
-        IPasswordHashingService passwordHashingService,
         IAccessTokenGenerator accessTokenGenerator)
     {
         _userRepository = userRepository;
-        _passwordHashingService = passwordHashingService;
         _accessTokenGenerator = accessTokenGenerator;
     }
 

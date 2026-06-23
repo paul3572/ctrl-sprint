@@ -19,7 +19,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\cts.core.svc.application\cts.core.svc.application.csproj" />
+      <ProjectReference Include="..\cts.core.svc.contracts\cts.core.svc.contracts.csproj" />
       <ProjectReference Include="..\cts.core.svc.domain\cts.core.svc.domain.csproj" />
     </ItemGroup>
-
+    
 </Project>

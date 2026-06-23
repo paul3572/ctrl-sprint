@@ -14,15 +14,15 @@ namespace TourGuideApplication.Controllers;
 [Route("api/auth")]
 public sealed class AuthController : ControllerBase
 {
-    private readonly RegisterUserCommandHandler _registerUserCommandHandler;
-    private readonly LoginUserCommandHandler _loginUserCommandHandler;
+    private readonly RegisterAuthService _registerAuthService;
+    private readonly LoginAuthService _loginAuthService;
 
     public AuthController(
-        RegisterUserCommandHandler registerUserCommandHandler,
-        LoginUserCommandHandler loginUserCommandHandler)
+        RegisterAuthService registerAuthService,
+        LoginAuthService loginAuthService)
     {
-        _registerUserCommandHandler = registerUserCommandHandler;
-        _loginUserCommandHandler = loginUserCommandHandler;
+        _registerAuthService = registerAuthService;
+        _loginAuthService = loginAuthService;
     }
 
     [AllowAnonymous]
@@ -33,7 +33,7 @@ public sealed class AuthController : ControllerBase
     {
         try
         {
-            AuthenticationResult result = await _registerUserCommandHandler.HandleAsync(
+            AuthenticationResult result = await _registerAuthService.HandleAsync(
                 new RegisterUserCommand(
                     request.Email,
                     request.Password),
@@ -80,7 +80,7 @@ public sealed class AuthController : ControllerBase
     {
         try
         {
-            AuthenticationResult result = await _loginUserCommandHandler.HandleAsync(
+            AuthenticationResult result = await _loginAuthService.HandleAsync(
                 new LoginUserCommand(
                     request.Email,
                     request.Password),
