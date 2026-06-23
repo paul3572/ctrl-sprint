@@ -28,7 +28,6 @@ export class Login {
       return;
     }
 
-    this.notification.success('Successfully logged in!');
     await this.router.navigate([AppPaths.home]);
   }
 }

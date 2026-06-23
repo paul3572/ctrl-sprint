@@ -22,13 +22,13 @@ export class Register {
   protected password = '';
 
   protected async onRegisterClicked() {
-    const success = this.auth.register(this.email, this.password);
+    const success = await this.auth.register(this.email, this.password);
     if (!success) {
       this.notification.error(this.auth.error() ?? 'Registration failed.');
       return;
     }
 
-    this.notification.success('Account created. You are now signed in.');
+    this.notification.success('Registration successful! You are now logged in.');
     await this.router.navigate([AppPaths.home]);
   }
 }

@@ -68,7 +68,7 @@ export class AppStateService {
       const user: User = {
         userGuid: response.userGuid,
         email: response.email,
-        createdAt: response.createdAt,
+        createdAt: new Date(response.createdAt),
       };
 
       this._user.set(user);
@@ -77,7 +77,11 @@ export class AppStateService {
       return true;
     } catch (error) {
       if (error instanceof HttpErrorResponse) {
-        this.error.set(error.error?.detail ?? error.message);
+        const backend = error.error;
+
+        this.error.set(
+          backend?.detail ?? backend?.errors?.Password?.[0] ?? backend?.title ?? error.message,
+        );
       } else {
         this.error.set('An unknown error occurred.');
       }

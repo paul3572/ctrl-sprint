@@ -2,7 +2,7 @@
 
 public sealed class AuthResponse
 {
-    public Guid UserId { get; init; }
+    public Guid UserGuid { get; init; }
 
     public string Email { get; init; } = string.Empty;
     

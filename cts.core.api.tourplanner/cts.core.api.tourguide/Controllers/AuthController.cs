@@ -68,16 +68,7 @@ public sealed class AuthController : ControllerBase
         }
         catch (PasswordPolicyViolationException exception)
         {
-            return BadRequest(new ValidationProblemDetails(
-                new Dictionary<string, string[]>
-                {
-                    ["password"] = new[] { exception.Message }
-                })
-            {
-                Status = StatusCodes.Status400BadRequest,
-                Title = "Password policy violation",
-                Detail = "Password needs to be at least 8 characters long."
-            });
+            return this.Problem(detail: "Password needs to be at least 8 characters long.");
         }
     }
 
@@ -112,7 +103,7 @@ public sealed class AuthController : ControllerBase
     {
         return new AuthResponse
         {
-            UserId = result.UserGuid,
+            UserGuid = result.UserGuid,
             Email = result.Email,
             CreatedAt = result.CreatedAt,
             AccessToken = result.AccessToken,
