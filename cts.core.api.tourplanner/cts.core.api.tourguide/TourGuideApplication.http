@@ -1,6 +1,37 @@
-@TourGuideApplication_HostAddress = http://localhost:5110
+@baseUrl = http://localhost:4321
+@email = paul.docker.001@example.com
+@displayName = Paul
+@password = TestPassword123!
 
-GET {{TourGuideApplication_HostAddress}}/weatherforecast/
-Accept: application/json
+### Health
+GET {{baseUrl}}/health
 
-###
+### Register
+# @name register
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "displayName": "{{displayName}}",
+  "password": "{{password}}"
+}
+
+### Login
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### Login with wrong password
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "WrongPassword123!"
+}

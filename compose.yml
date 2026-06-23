@@ -26,6 +26,33 @@ services:
     networks:
       - tourplanner-dev
 
+  api:
+    build:
+      context: ./cts.core.api.tourplanner
+      dockerfile: Dockerfile
+
+    image: tourplanner-api:dev
+    container_name: tourplanner-api-dev
+    restart: unless-stopped
+    init: true
+
+    env_file:
+      - ./cts.core.db.tourplanner/runtime/secrets/api.dev.secrets
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+
+    ports:
+      - "4321:8080"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    networks:
+      - tourplanner-dev
+
 networks:
   tourplanner-dev:
     name: tourplanner-dev
