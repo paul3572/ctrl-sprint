@@ -6,7 +6,7 @@ import { LoginResponse } from '../contracts/LoginResponse';
 
 @Injectable({ providedIn: 'root' })
 export class AppStateService {
-  private static readonly SessionCookieName = 'tp_mock_session';
+  private static readonly SessionCookieName = 'tour-guide_session';
 
   private readonly _user = signal<User | null>(null);
 

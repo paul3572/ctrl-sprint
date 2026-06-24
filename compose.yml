@@ -10,7 +10,7 @@ services:
       - ./cts.core.db.tourplanner/runtime/secrets/postgres.dev.secrets
 
     ports:
-      - "5433:5432"
+      - "15433:5432"
 
     volumes:
       - ./cts.core.db.tourplanner/runtime/postgres-dev:/var/lib/postgresql/data
