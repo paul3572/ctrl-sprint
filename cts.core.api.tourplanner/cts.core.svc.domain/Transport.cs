@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace cts.core.svc.contracts;
+namespace cts.core.svc.domain;
 
 public class Transport
 {

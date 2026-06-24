@@ -2,6 +2,7 @@
 using cts.core.svc.application.Auth.Exceptions;
 using cts.core.svc.application.Auth.Login;
 using cts.core.svc.application.Auth.Register;
+using cts.core.svc.application.Services;
 using cts.core.svc.contracts.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

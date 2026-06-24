@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Mail;
 
-namespace cts.core.svc.contracts;
+namespace cts.core.svc.domain;
 
 public class User
 {

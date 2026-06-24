@@ -47,7 +47,7 @@ public class TourController : ControllerBase, ITourController
         }
     }
 
-    [HttpPost]
+    [HttpPost("{userGuid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<GuidDto>> CreateTour(Guid userGuid, TourCmd tour)

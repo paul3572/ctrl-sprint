@@ -1,14 +1,14 @@
-﻿using cts.core.svc.contracts.TourLogs;
-using cts.core.svc.contracts.Tours;
+﻿using cts.core.svc.contracts;
+using cts.core.svc.contracts.TourLogs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace cts.core.svc.application.Interfaces;
 
 public interface ITourLogService
 {
-    Task<ActionResult<List<TourLogDto>>> GetTourLogsOfTour(Guid userGuid);
-    Task<ActionResult<TourLogDto>> GetTourLog(Guid tourGuid);
-    Task<ActionResult<Guid>> CreateTourLog(Guid userGuid, TourLogCmd tour);
-    Task<ActionResult<Guid>> UpdateTourLog(Guid tourGuid, TourLogCmd tour);
-    Task<ActionResult<string>> DeleteTourLog(Guid tourGuid);
+    Task<ActionResult<List<TourLogDto>>> GetTourLogsOfTour(Guid tourGuid);
+    Task<ActionResult<TourLogDto>> GetTourLog(Guid tourLogGuid);
+    Task<ActionResult<GuidDto>> CreateTourLog(Guid tourGuid, TourLogCmd tourLog);
+    Task<ActionResult<GuidDto>> UpdateTourLog(Guid tourGuid, TourLogCmd tourLog);
+    Task<ActionResult<GuidDto>> DeleteTourLog(Guid tourGuid);
 }

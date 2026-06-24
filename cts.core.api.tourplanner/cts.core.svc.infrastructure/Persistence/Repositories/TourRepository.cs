@@ -2,8 +2,10 @@
 using cts.core.svc.contracts;
 using cts.core.svc.contracts.TourLogs;
 using cts.core.svc.contracts.Tours;
+using cts.core.svc.domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TourLogDto = cts.core.svc.contracts.TourLogs.TourLogDto;
 
 namespace cts.core.svc.infrastructure.Persistence.Repositories;
 
@@ -72,7 +74,7 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
 
     public async Task<ActionResult<Guid>> UpdateTour(Guid tourGuid, TourCmd updatingTour)
     {
-        var tour = await db.Tours.FirstOrDefaultAsync();
+        var tour = await db.Tours.FirstOrDefaultAsync(t => t.TourGuid == tourGuid);
         
         if (tour is null)
             throw new KeyNotFoundException($"Tour with Guid {tourGuid} not found.");

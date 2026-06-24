@@ -4,6 +4,7 @@ using System.Text;
 using cts.core.svc.application.Abstractions.Authentication;
 using cts.core.svc.application.Abstractions.Time;
 using cts.core.svc.contracts;
+using cts.core.svc.domain;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 

@@ -1,5 +1,6 @@
 ﻿using cts.core.svc.contracts;
 using cts.core.svc.contracts.Tours;
+using cts.core.svc.domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace cts.core.svc.application.Interfaces;

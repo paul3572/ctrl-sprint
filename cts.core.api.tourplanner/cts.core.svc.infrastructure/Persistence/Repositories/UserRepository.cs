@@ -1,5 +1,6 @@
 ﻿using cts.core.svc.application.Abstractions.Persistence;
 using cts.core.svc.contracts;
+using cts.core.svc.domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace cts.core.svc.infrastructure.Persistence.Repositories;

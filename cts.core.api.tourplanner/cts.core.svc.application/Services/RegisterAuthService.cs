@@ -1,9 +1,11 @@
 ﻿using cts.core.svc.application.Abstractions.Authentication;
 using cts.core.svc.application.Abstractions.Persistence;
+using cts.core.svc.application.Auth;
 using cts.core.svc.application.Auth.Exceptions;
-using cts.core.svc.contracts;
+using cts.core.svc.application.Auth.Register;
+using cts.core.svc.domain;
 
-namespace cts.core.svc.application.Auth.Register;
+namespace cts.core.svc.application.Services;
 
 public sealed class RegisterAuthService
 {

@@ -1,5 +1,6 @@
 ﻿using cts.core.svc.application.Interfaces;
 using cts.core.svc.contracts;
+using cts.core.svc.domain;
 
 namespace cts.core.svc.application.Services;
 
