@@ -7,4 +7,5 @@
   <Project Path="cts.core.svc.contracts/cts.core.svc.contracts.csproj" />
   <Project Path="cts.core.svc.domain/cts.core.svc.domain.csproj" />
   <Project Path="cts.core.svc.infrastructure/cts.core.svc.infrastructure.csproj" />
+  <Project Path="cts.core.tests.tourguide/cts.core.tests.tourguide.csproj" />
 </Solution>

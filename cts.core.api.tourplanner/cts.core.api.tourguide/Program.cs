@@ -1,5 +1,7 @@
 using System.Text;
 using cts.core.svc.application;
+using cts.core.svc.application.Interfaces;
+using cts.core.svc.application.Services;
 using cts.core.svc.infrastructure;
 using cts.core.svc.infrastructure.Authentication;
 using cts.core.svc.infrastructure.Persistence;
@@ -66,6 +68,17 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowCredentials();
     });
+});
+
+/*builder.Services.AddHttpClient<IWeatherService, OpenWeatherService>(client =>
+{
+    client.BaseAddress =
+        new Uri("https://api.openweathermap.org/data/2.5/");
+});*/
+
+builder.Services.AddHttpClient<IWeatherService, OpenMeteoService>(client =>
+{
+    client.BaseAddress = new Uri("https://api.open-meteo.com/v1/");
 });
 
 var app = builder.Build();
