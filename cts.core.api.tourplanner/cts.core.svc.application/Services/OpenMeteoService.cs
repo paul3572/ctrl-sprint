@@ -13,17 +13,8 @@ public sealed class OpenMeteoService : IWeatherService
         _httpClient = httpClient;
     }
 
-    public async Task<WeatherDto> GetWeatherAsync(string city)
+    public async Task<WeatherDto> GetWeatherAsync(double lat, double lon)
     {
-        var (lat, lon) = city.ToLower() switch
-        {
-            "wien" => (48.2082, 16.3738),
-            "linz" => (48.3069, 14.2858),
-            "salzburg" => (47.8095, 13.0550),
-            "boston" => (42.3584, -71.0598),
-            _ => throw new ArgumentException($"Unknown city: {city}")
-        };
-
         var response = await _httpClient.GetFromJsonAsync<OpenMeteoResponse>(
             $"forecast?latitude={lat}&longitude={lon}&current=temperature_2m,weather_code");
 
@@ -34,7 +25,6 @@ public sealed class OpenMeteoService : IWeatherService
         Console.WriteLine(response.Current);
         
         return new WeatherDto(
-            city,
             response.Current.Temperature,
             GetDescription(response.Current.WeatherCode));
     }

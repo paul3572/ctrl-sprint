@@ -16,11 +16,10 @@ public class OpenMeteoServiceTests
         var service = new OpenMeteoService(httpClient);
 
         // Act
-        var result = await service.GetWeatherAsync("Wien");
+        var result = await service.GetWeatherAsync(48.210033, 16.363449);
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.City, Is.EqualTo("Wien"));
         Assert.That(result.Description, Is.Not.Empty);
         Assert.That(result.Temperature, Is.InRange(-50, 60));
     }

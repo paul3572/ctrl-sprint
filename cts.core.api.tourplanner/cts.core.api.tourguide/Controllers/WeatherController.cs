@@ -1,12 +1,13 @@
 ﻿using cts.core.svc.application.Interfaces;
 using cts.core.svc.contracts;
 using Microsoft.AspNetCore.Mvc;
+using TourGuideApplication.Interfaces;
 
 namespace TourGuideApplication.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class WeatherController : ControllerBase
+public class WeatherController : ControllerBase, IWeatherController
 {
     private readonly IWeatherService _weatherService;
 
@@ -15,9 +16,9 @@ public class WeatherController : ControllerBase
         _weatherService = weatherService;
     }
 
-    [HttpGet("{city}")]
-    public async Task<WeatherDto> GetWeather(string city)
+    [HttpGet]
+    public async Task<WeatherDto> GetWeather([FromQuery] double lat, [FromQuery] double lon)
     {
-        return await _weatherService.GetWeatherAsync(city);
+        return await _weatherService.GetWeatherAsync(lat, lon);
     }
 }

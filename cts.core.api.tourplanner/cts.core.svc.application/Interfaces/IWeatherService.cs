@@ -4,5 +4,5 @@ namespace cts.core.svc.application.Interfaces;
 
 public interface IWeatherService
 {
-    Task<WeatherDto> GetWeatherAsync(string city);
+    Task<WeatherDto> GetWeatherAsync(double lat, double lon);
 }
