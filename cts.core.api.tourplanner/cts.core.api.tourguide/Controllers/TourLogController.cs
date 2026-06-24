@@ -78,6 +78,9 @@ public class TourLogController : ControllerBase, ITourLogController
         }
     }
 
+    [HttpDelete("{tourLogGuid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<GuidDto>> DeleteTourLog(Guid tourLogGuid)
     {
         try
