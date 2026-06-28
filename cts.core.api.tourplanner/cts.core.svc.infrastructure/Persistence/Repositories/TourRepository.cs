@@ -1,6 +1,4 @@
 ﻿using cts.core.svc.application.Interfaces;
-using cts.core.svc.contracts;
-using cts.core.svc.contracts.TourLogs;
 using cts.core.svc.contracts.Tours;
 using cts.core.svc.domain;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +23,7 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
                 t.From,
                 t.To,
                 t.Transport.Name,
-                t.TourDistanceKm,
+                t.TourDistanceInMeters,
                 t.EstimatedTimeMinutes,
                 t.Rating,
                 t.TourLogs.Select(tl => new TourLogDto(
@@ -34,7 +32,7 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
                     tl.Timestamp,
                     tl.Comment,
                     tl.Difficulty,
-                    tl.TotalDistanceKm,
+                    tl.TotalDistanceInMeters,
                     tl.TotalTimeMin,
                     tl.Rating
                     )).ToList()
@@ -50,7 +48,7 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
             .FirstOrDefaultAsync(t => t.TourGuid == tourGuid);
     }
 
-    public async Task<ActionResult<Guid>> CreateTour(Guid userGuid, TourCmd tour)
+    public async Task<ActionResult<Guid>> CreateTour(Guid userGuid, TourCmd tour, double distanceInMeters, int estimatedTimeMin)
     {
         var user = await db.Users.FirstOrDefaultAsync(u  => u.UserGuid == userGuid);
         
@@ -60,9 +58,9 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
         var creatingTour = new Tour(
             user,
             await transportRepo.GetTransportTypeByName(tour.TransportName) ??
-            await transportRepo.GetTransportTypeById(1) ?? new Transport("Car"),
-            tour.TourDistanceKm,
-            tour.EstimatedTimeMinutes,
+            await transportRepo.GetTransportTypeById(1) ?? new Transport("Car", "driving-car"),
+            distanceInMeters,
+            estimatedTimeMin,
             tour.Rating
         );
         
@@ -83,9 +81,7 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
         tour.Description = updatingTour.Description;
         tour.From = updatingTour.From;
         tour.To = updatingTour.To;
-        tour.Transport = await transportRepo.GetTransportTypeByName(updatingTour.TransportName) ?? await transportRepo.GetTransportTypeById(1) ?? new Transport("Car");
-        tour.TourDistanceKm = updatingTour.TourDistanceKm;
-        tour.EstimatedTimeMinutes = updatingTour.EstimatedTimeMinutes;
+        tour.Transport = await transportRepo.GetTransportTypeByName(updatingTour.TransportName) ?? await transportRepo.GetTransportTypeById(1) ?? new Transport("Car", "driving_car");
         tour.Rating = updatingTour.Rating;
         
         await db.SaveChangesAsync();

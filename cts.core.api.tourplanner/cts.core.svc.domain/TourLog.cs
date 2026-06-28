@@ -4,13 +4,13 @@ namespace cts.core.svc.domain;
 
 public class TourLog
 {
-    public TourLog(Tour tour, DateTime timestamp, string comment, int difficulty, int totalDistanceKm, int totalTimeMin, int rating)
+    public TourLog(Tour tour, DateTime timestamp, string comment, int difficulty, int totalDistanceInMeters, int totalTimeMin, int rating)
     {
         Tour = tour;
         Timestamp = timestamp;
         Comment = comment;
         Difficulty = difficulty;
-        TotalDistanceKm = totalDistanceKm;
+        TotalDistanceInMeters = totalDistanceInMeters;
         TotalTimeMin = totalTimeMin;
         Rating = rating;
     }
@@ -27,7 +27,7 @@ public class TourLog
     public DateTime Timestamp { get; set; }
     public string Comment { get; set; }
     public int Difficulty { get; set; }    
-    public int TotalDistanceKm { get; set; }
+    public int TotalDistanceInMeters { get; set; }
     public int TotalTimeMin { get; set; }
     public int Rating { get; set; }
 }

@@ -7,7 +7,5 @@ public record TourCmd(
      string From,
      string To,
      string TransportName,
-     int TourDistanceKm,
-     int EstimatedTimeMinutes,
      int Rating
 );

@@ -10,7 +10,7 @@ public record TourDto(
     string From,
     string To,
     string TransportName,
-    int TourDistanceKm,
+    double TourDistanceInMeters,
     int EstimatedTimeMinutes,
     int Rating,
     List<TourLogDto> TourLogs

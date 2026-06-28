@@ -19,7 +19,7 @@ public class TourLogRepository(TourPlannerDbContext db) : ITourLogRepository
                 tl.Timestamp,
                 tl.Comment,
                 tl.Difficulty,
-                tl.TotalDistanceKm,
+                tl.TotalDistanceInMeters,
                 tl.TotalTimeMin,
                 tl.Rating
             ))
@@ -36,7 +36,7 @@ public class TourLogRepository(TourPlannerDbContext db) : ITourLogRepository
                 tl.Timestamp,
                 tl.Comment,
                 tl.Difficulty,
-                tl.TotalDistanceKm,
+                tl.TotalDistanceInMeters,
                 tl.TotalTimeMin,
                 tl.Rating
             ))
@@ -55,7 +55,7 @@ public class TourLogRepository(TourPlannerDbContext db) : ITourLogRepository
             tourLog.Timestamp,
             tourLog.Comment,
             tourLog.Difficulty,
-            tourLog.TotalDistanceKm,
+            tourLog.TotalDistanceInMeters,
             tourLog.TotalTimeMin,
             tourLog.Rating
         );
@@ -76,7 +76,7 @@ public class TourLogRepository(TourPlannerDbContext db) : ITourLogRepository
         updatingTourLog.Timestamp = tourLog.Timestamp;
         updatingTourLog.Comment = tourLog.Comment;
         updatingTourLog.Difficulty = tourLog.Difficulty;
-        updatingTourLog.TotalDistanceKm = tourLog.TotalDistanceKm;
+        updatingTourLog.TotalDistanceInMeters = tourLog.TotalDistanceInMeters;
         updatingTourLog.TotalTimeMin = tourLog.TotalTimeMin;
         updatingTourLog.Rating = tourLog.Rating;
         

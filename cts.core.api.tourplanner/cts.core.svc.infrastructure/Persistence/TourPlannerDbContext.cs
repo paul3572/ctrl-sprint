@@ -1,5 +1,4 @@
 ﻿using cts.core.svc.application.Abstractions.Persistence;
-using cts.core.svc.contracts;
 using cts.core.svc.domain;
 using Microsoft.EntityFrameworkCore;
 
@@ -69,10 +68,10 @@ public class TourPlannerDbContext : DbContext, IUnitOfWork
         this.Users.AddRange(user1, user2);
         this.SaveChanges();
         
-        var transport1 = new Transport("Car");
-        var transport2 = new Transport("Bike");
-        var transport3 = new Transport("By Foot");
-        var transport4 = new Transport("Public Transport");
+        var transport1 = new Transport("Car", "driving-car");
+        var transport2 = new Transport("Bike", "cycling-regular");
+        var transport3 = new Transport("Hiking", "foot-hiking");
+        var transport4 = new Transport("Running", "foot-walking");
         
         this.Transports.AddRange(transport1, transport2, transport3, transport4);
         this.SaveChanges();

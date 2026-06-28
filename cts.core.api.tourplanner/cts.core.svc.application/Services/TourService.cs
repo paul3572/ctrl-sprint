@@ -8,10 +8,13 @@ namespace cts.core.svc.application.Services;
 public class TourService : ITourService
 {
     private readonly ITourRepository tourRepository;
+    private readonly IRouteService routeService;
+    private readonly ITransportRepository transportRepository;
     
-    public TourService(ITourRepository tourRepository)
+    public TourService(ITourRepository tourRepository, IRouteService routeService)
     {
         this.tourRepository = tourRepository;
+        this.routeService = routeService;
     }
 
     public async Task<ActionResult<List<TourDto>>> GetToursOfUser(Guid userGuid)
@@ -36,7 +39,7 @@ public class TourService : ITourService
             tourDto.From,
             tourDto.To,
             tourDto.Transport.Name,
-            tourDto.TourDistanceKm,
+            tourDto.TourDistanceInMeters,
             tourDto.EstimatedTimeMinutes,
             tourDto.Rating,
             tourDto.TourLogs.Select(log => new TourLogDto(
@@ -45,7 +48,7 @@ public class TourService : ITourService
                 log.Timestamp,
                 log.Comment,
                 log.Difficulty,
-                log.TotalDistanceKm,
+                log.TotalDistanceInMeters,
                 log.TotalTimeMin,
                 log.Rating
             )).ToList()
@@ -54,7 +57,14 @@ public class TourService : ITourService
 
     public async Task<ActionResult<Guid>> CreateTour(Guid userGuid, TourCmd tour)
     {
-        return await this.tourRepository.CreateTour(userGuid, tour);
+        var transport = await this.transportRepository.GetTransportTypeByName(tour.TransportName);
+        
+        if (transport is null)
+            throw new KeyNotFoundException($"Transport type {tour.TransportName} not found.");
+        
+        var routeResult = await this.routeService.GetRouteAsync(tour.From, tour.To, transport.OpenRouteProfile);
+        
+        return await this.tourRepository.CreateTour(userGuid, tour, routeResult.DistanceInMeters, routeResult.EstimatedTimeMin);
     }
 
     public async Task<ActionResult<Guid>> UpdateTour(Guid tourGuid, TourCmd tour)

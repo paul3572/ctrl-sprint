@@ -5,7 +5,7 @@ public record TourLogCmd(
     DateTime Timestamp,
     string Comment,
     int Difficulty,
-    int TotalDistanceKm,
+    int TotalDistanceInMeters,
     int TotalTimeMin,
     int Rating
 );

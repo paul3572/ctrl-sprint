@@ -1,4 +1,5 @@
-﻿using cts.core.svc.application.Interfaces;
+﻿using System.ComponentModel.DataAnnotations;
+using cts.core.svc.application.Interfaces;
 using cts.core.svc.contracts;
 using cts.core.svc.contracts.Tours;
 using Microsoft.AspNetCore.Mvc;
@@ -56,6 +57,10 @@ public class TourController : ControllerBase, ITourController
         {
             var createdTour = await this.tourService.CreateTour(userGuid, tour);
             return Ok(new GuidDto(createdTour.Value));
+        }
+        catch (ValidationException e)
+        {
+            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: e.InnerException?.Message ?? e.Message);
         }
         catch  (Exception ex)
         {

@@ -70,11 +70,13 @@ builder.Services.AddCors(options =>
     });
 });
 
-/*builder.Services.AddHttpClient<IWeatherService, OpenWeatherService>(client =>
+builder.Services.AddHttpClient<IRouteService, OpenRouteService>(client =>
 {
-    client.BaseAddress =
-        new Uri("https://api.openweathermap.org/data/2.5/");
-});*/
+    client.BaseAddress = new Uri("https://api.openrouteservice.org/");
+    client.DefaultRequestHeaders.Add("Authorization",
+        builder.Configuration["OpenRouteService:ApiKey"] ??
+        throw new InvalidOperationException("OpenRouteService API key is missing."));
+});
 
 builder.Services.AddHttpClient<IWeatherService, OpenMeteoService>(client =>
 {

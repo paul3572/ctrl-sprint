@@ -4,31 +4,33 @@ namespace cts.core.svc.domain;
 
 public class Tour
 {
-    public Tour(User user, Transport transport, int tourDistanceKm, int estimatedTimeMinutes, int rating)
+    public Tour(User user, Transport transport, double tourDistanceInMeters, int estimatedTimeMinutes, int rating)
     {
         this.User = user;
         this.Transport = transport;
-        this.TourDistanceKm = tourDistanceKm;
+        this.TourDistanceInMeters = tourDistanceInMeters;
         this.EstimatedTimeMinutes = estimatedTimeMinutes;
         this.Rating = rating;
     }
     
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
-    public Tour() { }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    public Tour()
+    {
+        this.User = new User("init", "init", DateTime.Now);
+        this.Transport = new Transport("init", "init");
+    }
     
     [Key]
     public int TourId { get; private set; }
     public Guid TourGuid { get;  private set; }
     public int UserId { get; private set; }
-    public virtual User User { get; private set; } = null!;
+    public virtual User User { get; private set; }
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string From  { get; set; } = string.Empty;
     public string To { get; set; } = string.Empty;
-    public int TransportId { get; set; }
+    public int TransportId { get; init; }
     public virtual Transport Transport { get; set; }
-    public int TourDistanceKm { get; set; }
+    public double TourDistanceInMeters { get; set; }
     public int EstimatedTimeMinutes { get; set; }
     public int Rating { get; set; }
 
