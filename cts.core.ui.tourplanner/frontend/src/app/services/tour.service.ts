@@ -75,18 +75,41 @@ export class TourService {
     return this._tours().find((t) => t.tourGuid === tourGuid);
   }
 
-  updateTour(tourGuid: string, updates: Partial<Tour>): void {
+  async updateTour(tourGuid: string, updates: Partial<Tour>): Promise<Tour> {
+    this.isLoading.set(true);
+    this.error.set(null);
+
     const currentUser = this.appState.currentUser();
     if (!currentUser) {
       throw new Error('Cannot update tour: no authenticated user');
     }
 
-    this._tours.update((tours) =>
-      tours.map((t) =>
-        t.tourGuid === tourGuid && t.userGuid === currentUser.userGuid ? { ...t, ...updates } : t,
-      ),
-    );
-    this.persistToStorage();
+    try {
+      const response = await firstValueFrom(
+        this.http.patch<TourDto>(`/api/tour/${tourGuid}`, {
+          userGuid: currentUser.userGuid,
+          name: updates.name,
+          description: updates.description,
+          from: updates.from,
+          to: updates.to,
+          transportName: updates.transportType,
+          rating: updates.rating,
+        }),
+      );
+
+      await this.loadToursFromBackend();
+
+      return this.mapTourDto(response);
+    } catch (error) {
+      if (error instanceof HttpErrorResponse) {
+        this.error.set(error.error?.detail ?? error.message);
+      } else {
+        this.error.set('An unknown error occurred.');
+      }
+      return updates as Tour;
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   async deleteTour(tourGuid: string): Promise<void> {
