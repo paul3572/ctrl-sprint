@@ -32,8 +32,7 @@ export class TourFormComponent {
       from: ['', [Validators.required]],
       to: ['', [Validators.required]],
       transportType: [Transport.Car, [Validators.required]],
-      tourDistance: [0, [Validators.required, Validators.min(0.1)]],
-      estimatedTimeMinutes: [0, [Validators.required, Validators.min(1)]],
+      rating: [5, Validators.required],
     });
   }
 
@@ -60,9 +59,9 @@ export class TourFormComponent {
         from: this.form.value.from,
         to: this.form.value.to,
         transportType: this.form.value.transportType,
-        tourDistance: parseFloat(this.form.value.tourDistance),
-        estimatedTimeMinutes: parseInt(this.form.value.estimatedTimeMinutes, 10),
-        rating: 0,
+        tourDistance: 0,
+        estimatedTimeMinutes: 0,
+        rating: this.form.value.rating,
         tourLogs: [],
       };
       this.tourSubmitted.emit(newTour);

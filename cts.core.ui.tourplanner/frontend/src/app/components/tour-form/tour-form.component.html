@@ -9,7 +9,7 @@
       class="form-input"
     />
     @if (form.get('name')?.touched && form.get('name')?.invalid) {
-      <div class="error" >
+      <div class="error">
         {{ getErrorMessage('name') }}
       </div>
     }
@@ -33,82 +33,67 @@
         id="from"
         type="text"
         formControlName="from"
-       placeholder="Starting point"
+        placeholder="Starting point"
         class="form-input"
-       />
-       @if (form.get('from')?.touched && form.get('from')?.invalid) {
-         <div class="error">{{ getErrorMessage('from') }}</div>
-       }
-     </div>
+      />
+      @if (form.get('from')?.touched && form.get('from')?.invalid) {
+        <div class="error">{{ getErrorMessage('from') }}</div>
+      }
+    </div>
 
-     <div class="form-group">
-       <label for="to">To *</label>
-       <input
-         id="to"
-         type="text"
-         formControlName="to"
-         placeholder="Destination"
-         class="form-input"
-       />
-       @if (form.get('to')?.touched && form.get('to')?.invalid) {
-         <div class="error">{{ getErrorMessage('to') }}</div>
-       }
+    <div class="form-group">
+      <label for="to">To *</label>
+      <input
+        id="to"
+        type="text"
+        formControlName="to"
+        placeholder="Destination"
+        class="form-input"
+      />
+      @if (form.get('to')?.touched && form.get('to')?.invalid) {
+        <div class="error">{{ getErrorMessage('to') }}</div>
+      }
     </div>
   </div>
 
   <div class="form-row">
     <div class="form-group">
-       <label for="transportType">Transport Type *</label>
-       <select id="transportType" formControlName="transportType" class="form-select">
-         @for (type of transportTypes; track type) {
-           <option [value]="type">
-             {{ type | titlecase }}
-           </option>
-         }
-       </select>
-     </div>
-
-     <div class="form-group">
-       <label for="tourDistance">Distance (km) *</label>
-       <input
-         id="tourDistance"
-         type="number"
-         step="0.1"
-         formControlName="tourDistance"
-         placeholder="0.0"
-         class="form-input"
-       />
-       @if (form.get('tourDistance')?.touched && form.get('tourDistance')?.invalid) {
-         <div class="error">{{ getErrorMessage('tourDistance') }}</div>
-       }
-     </div>
-
-     <div class="form-group">
-       <label for="estimatedTimeMinutes">Time (min) *</label>
-       <input
-         id="estimatedTimeMinutes"
-         type="number"
-         formControlName="estimatedTimeMinutes"
-         placeholder="0"
-         class="form-input"
-       />
-       @if (form.get('estimatedTimeMinutes')?.touched && form.get('estimatedTimeMinutes')?.invalid) {
-         <div class="error">{{ getErrorMessage('estimatedTimeMinutes') }}</div>
-       }
+      <label for="transportType">Transport Type</label>
+      <select id="transportType" formControlName="transportType" class="form-select">
+        @for (type of transportTypes; track type) {
+          <option [value]="type">
+            {{ type | titlecase }}
+          </option>
+        }
+      </select>
     </div>
   </div>
 
-   <div class="form-actions">
-     <button type="submit" class="btn btn-primary" [disabled]="submitting()">
-       @if (submitting()) {
-         Creating...
-       } @else {
-         Create Tour
-       }
-     </button>
-     <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="submitting()">
-       Cancel
-     </button>
-   </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label for="rating">Rating</label>
+      <select id="rating" formControlName="rating" class="form-select">
+        <option [value]="0">0 - not rated</option>
+        <option [value]="1">1</option>
+        <option [value]="2">2</option>
+        <option [value]="3">3</option>
+        <option [value]="4">4</option>
+        <option [value]="5">5</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary" [disabled]="submitting()">
+      @if (submitting()) {
+        Creating...
+      } @else {
+        Create Tour
+      }
+    </button>
+    <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="submitting()">
+      Cancel
+    </button>
+  </div>
 </form>
 

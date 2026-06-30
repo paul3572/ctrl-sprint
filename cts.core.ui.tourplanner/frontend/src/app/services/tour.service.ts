@@ -3,10 +3,9 @@ import { Tour } from '../models/tour';
 import { TourLog } from '../models/tourLog';
 import { Transport } from '../models/transport';
 import { AppStateService } from './app-state.service';
-import {firstValueFrom} from 'rxjs';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { TourDto } from '../contracts/TourDto';
-import { TourLogDto } from '../contracts/TourLogDto';
 
 @Injectable({ providedIn: 'root' })
 export class TourService {
@@ -25,8 +24,10 @@ export class TourService {
     return this._tours().filter((t) => t.userGuid === currentUser.userGuid);
   });
 
-  constructor(private readonly appState: AppStateService,
-              private readonly http: HttpClient) {}
+  constructor(
+    private readonly appState: AppStateService,
+    private readonly http: HttpClient,
+  ) {}
 
   async addTour(tour: Tour): Promise<boolean> {
     this.isLoading.set(true);
@@ -55,18 +56,10 @@ export class TourService {
         }),
       );
 
-      const createdTour: Tour = this.mapTourDto(response);
-
-      this._tours.update((tours) => [createdTour, ...tours]);
-
-      console.log('ALL TOURS:', this._tours());
-      console.log('CURRENT USER:', this.appState.currentUser());
-
-      this.persistToStorage();
+      await this.loadToursFromBackend();
 
       return true;
-    }
-    catch (error) {
+    } catch (error) {
       if (error instanceof HttpErrorResponse) {
         this.error.set(error.error?.detail ?? error.message);
       } else {
@@ -159,7 +152,9 @@ export class TourService {
         if (t.tourGuid === tourGuid && t.userGuid === currentUser.userGuid) {
           return {
             ...t,
-            tourLogs: (t.tourLogs ?? []).map((log) => (log.tourLogGuid === updatedLog.tourLogGuid ? { ...log, ...updatedLog } : log)),
+            tourLogs: (t.tourLogs ?? []).map((log) =>
+              log.tourLogGuid === updatedLog.tourLogGuid ? { ...log, ...updatedLog } : log,
+            ),
           };
         }
         return t;
@@ -168,11 +163,6 @@ export class TourService {
     this.persistToStorage();
   }
 
-  /**
-   * Load tours from mock backend API.
-   * Later: replace with HttpClient.get('/api/tours')
-   * Merges backend tours with locally created tours (by tourGuid).
-   */
   async loadToursFromBackend(): Promise<boolean> {
     this.isLoading.set(true);
     this.error.set(null);
@@ -191,7 +181,7 @@ export class TourService {
         this.http.get<TourDto[]>(`/api/tour?userGuid=${currentUser.userGuid}`),
       );
 
-      const tours = response.map(dto => this.mapTourDto(dto));
+      const tours = response.map((dto) => this.mapTourDto(dto));
 
       this._tours.set(tours);
 
@@ -205,27 +195,6 @@ export class TourService {
       return false;
     } finally {
       this.isLoading.set(false);
-    }
-  }
-
-  private hydrateFromStorage(): void {
-    try {
-      const raw = typeof localStorage !== 'undefined' ? localStorage.getItem(TourService.TourStorageKey) : null;
-      if (!raw) {
-        this._tours.set([]);
-        return;
-      }
-
-      const parsed = JSON.parse(raw) as Tour[];
-      // Basic validation
-      if (Array.isArray(parsed)) {
-        this._tours.set(parsed);
-      } else {
-        this._tours.set([]);
-      }
-    } catch {
-      console.error('[TourService] Failed to hydrate tours from storage');
-      this._tours.set([]);
     }
   }
 
@@ -251,16 +220,18 @@ export class TourService {
       tourDistance: dto.tourDistanceInMeters,
       estimatedTimeMinutes: dto.estimatedTimeMinutes,
       rating: dto.rating,
-      tourLogs: (dto.tourLogs ?? []).map((log): TourLog => ({
-        tourLogGuid: log.tourLogGuid,
-        tourGuid: log.tourGuid,
-        dateTime: new Date(log.timestamp),
-        comment: log.comment,
-        difficulty: log.difficulty,
-        totalDistance: log.totalDistanceInMeters,
-        totalTime: log.totalTimeMin,
-        rating: log.rating
-      }))
+      tourLogs: (dto.tourLogs ?? []).map(
+        (log): TourLog => ({
+          tourLogGuid: log.tourLogGuid,
+          tourGuid: log.tourGuid,
+          dateTime: new Date(log.timestamp),
+          comment: log.comment,
+          difficulty: log.difficulty,
+          totalDistance: log.totalDistanceInMeters,
+          totalTime: log.totalTimeMin,
+          rating: log.rating,
+        }),
+      ),
     };
   }
 }
