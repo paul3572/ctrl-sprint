@@ -46,7 +46,7 @@ export class TourDetail implements OnInit {
       description: [''],
       from: ['', [Validators.required]],
       to: ['', [Validators.required]],
-      transportType: [Transport.Foot, [Validators.required]],
+      transportType: [Transport.Car, [Validators.required]],
       tourDistance: [0, [Validators.required, Validators.min(0.1)]],
       estimatedTimeMinutes: [0, [Validators.required, Validators.min(1)]],
       rating: [0, [Validators.required, Validators.min(0), Validators.max(5)]],

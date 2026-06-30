@@ -3,14 +3,15 @@ import { Tour } from '../models/tour';
 import { TourLog } from '../models/tourLog';
 import { Transport } from '../models/transport';
 import { AppStateService } from './app-state.service';
+import {firstValueFrom} from 'rxjs';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class TourService {
   private static readonly TourStorageKey = 'tp_tours';
-
   private readonly _tours = signal<Tour[]>([]);
-
   readonly isLoading = signal(false);
+  readonly error = signal<string | null>(null);
 
   // All tours (from all users) - exposed for future "browse all tours" feature
   readonly allTours = computed(() => this._tours());
@@ -22,11 +23,12 @@ export class TourService {
     return this._tours().filter((t) => t.userGuid === currentUser.userGuid);
   });
 
-  constructor(private readonly appState: AppStateService) {
+  constructor(private readonly appState: AppStateService,
+              private readonly http: HttpClient) {
     this.hydrateFromStorage();
   }
 
-  addTour(tour: Tour): void {
+  async addTour(tour: Tour): Promise<void> {
     const currentUser = this.appState.currentUser();
     if (!currentUser) {
       throw new Error('Cannot add tour: no authenticated user');
@@ -37,8 +39,32 @@ export class TourService {
       userGuid: currentUser.userGuid,
     };
 
-    this._tours.update((tours) => [newTour, ...tours]);
-    this.persistToStorage();
+    try {
+      const response = await firstValueFrom(
+        this.http.post<string>(`/api/tour/${newTour.userGuid}`, {
+          userGuid: newTour.userGuid,
+          name: newTour.name,
+          description: newTour.description,
+          from: newTour.from,
+          to: newTour.to,
+          transportName: newTour.transportType,
+          rating: newTour.rating,
+        }),
+      );
+
+      this._tours.update((tours) => [newTour, ...tours]);
+      this.persistToStorage();
+
+    }
+    catch (error) {
+      if (error instanceof HttpErrorResponse) {
+        this.error.set(error.error?.detail ?? error.message);
+      } else {
+        this.error.set('An unknown error occurred.');
+      }
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   getTourByGuid(tourGuid: string): Tour | undefined {
@@ -194,7 +220,7 @@ export class TourService {
         description: 'Challenging hike with mountain views.',
         from: 'Karsee Lake',
         to: 'Zugspitze Peak',
-        transportType: Transport.Foot,
+        transportType: Transport.Car,
         tourDistance: 16.2,
         estimatedTimeMinutes: 480,
         rating: 5,

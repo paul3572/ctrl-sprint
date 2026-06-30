@@ -1,6 +1,6 @@
 ﻿export enum Transport {
-  Bike = 'bike',
-  Car = 'car',
-  Foot = 'foot',
-  PublicTransport = 'public transport',
+  Car = "Car",
+  Bike = "Bike",
+  Hiking = "Hiking",
+  Running = "Running",
 }

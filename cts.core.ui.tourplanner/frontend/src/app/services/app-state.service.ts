@@ -35,6 +35,7 @@ export class AppStateService {
         userGuid: response.userGuid,
         email: response.email,
         createdAt: new Date(response.createdAt),
+        accessToken: response.accessToken,
       };
 
       this._user.set(user);
@@ -70,6 +71,7 @@ export class AppStateService {
         userGuid: response.userGuid,
         email: response.email,
         createdAt: new Date(response.createdAt),
+        accessToken: response.accessToken,
       };
 
       this._user.set(user);
@@ -107,7 +109,7 @@ export class AppStateService {
     }
 
     try {
-      const parsed = JSON.parse(raw) as { guid: string; email: string; createdAt: string };
+      const parsed = JSON.parse(raw) as { guid: string; email: string; createdAt: string; accessToken: string };
       if (!parsed?.guid || !parsed?.email || !parsed?.createdAt) {
         this.clearCookie();
         return;
@@ -117,6 +119,7 @@ export class AppStateService {
         userGuid: parsed.guid,
         email: parsed.email,
         createdAt: new Date(parsed.createdAt),
+        accessToken: parsed.accessToken,
       });
     } catch {
       this.clearCookie();
@@ -137,6 +140,7 @@ export class AppStateService {
         guid: user.userGuid,
         email: user.email,
         createdAt: user.createdAt.toISOString(),
+        accessToken: user.accessToken,
       }),
     );
 

@@ -13,6 +13,19 @@ public class Tour
         this.Rating = rating;
     }
     
+    public Tour(User user, string name, string description, string from, string to, Transport transport, double tourDistanceInMeters, int estimatedTimeMinutes, int rating)
+    {
+        this.User = user;
+        this.Name = name;
+        this.Description = description;
+        this.From = from;
+        this.To = to;
+        this.Transport = transport;
+        this.TourDistanceInMeters = tourDistanceInMeters;
+        this.EstimatedTimeMinutes = estimatedTimeMinutes;
+        this.Rating = rating;
+    }
+    
     public Tour()
     {
         this.User = new User("init", "init", DateTime.Now);

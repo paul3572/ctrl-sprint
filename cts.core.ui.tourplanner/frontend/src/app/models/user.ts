@@ -2,4 +2,5 @@
   userGuid: string;
   email: string;
   createdAt: Date;
+  accessToken: string;
 }

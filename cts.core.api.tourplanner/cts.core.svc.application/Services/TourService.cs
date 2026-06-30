@@ -11,10 +11,11 @@ public class TourService : ITourService
     private readonly IRouteService routeService;
     private readonly ITransportRepository transportRepository;
     
-    public TourService(ITourRepository tourRepository, IRouteService routeService)
+    public TourService(ITourRepository tourRepository, IRouteService routeService, ITransportRepository transportRepository)
     {
         this.tourRepository = tourRepository;
         this.routeService = routeService;
+        this.transportRepository = transportRepository;
     }
 
     public async Task<ActionResult<List<TourDto>>> GetToursOfUser(Guid userGuid)

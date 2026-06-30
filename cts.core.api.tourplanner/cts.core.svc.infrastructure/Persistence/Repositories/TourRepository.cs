@@ -57,6 +57,10 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
 
         var creatingTour = new Tour(
             user,
+            tour.Name,
+            tour.Description,
+            tour.From,
+            tour.To,
             await transportRepo.GetTransportTypeByName(tour.TransportName) ??
             await transportRepo.GetTransportTypeById(1) ?? new Transport("Car", "driving-car"),
             distanceInMeters,
