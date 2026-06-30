@@ -5,6 +5,8 @@ import { Transport } from '../models/transport';
 import { AppStateService } from './app-state.service';
 import {firstValueFrom} from 'rxjs';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import { TourDto } from '../contracts/TourDto';
+import { TourLogDto } from '../contracts/TourLogDto';
 
 @Injectable({ providedIn: 'root' })
 export class TourService {
@@ -28,7 +30,10 @@ export class TourService {
     this.hydrateFromStorage();
   }
 
-  async addTour(tour: Tour): Promise<void> {
+  async addTour(tour: Tour): Promise<boolean> {
+    this.isLoading.set(true);
+    this.error.set(null);
+
     const currentUser = this.appState.currentUser();
     if (!currentUser) {
       throw new Error('Cannot add tour: no authenticated user');
@@ -41,7 +46,7 @@ export class TourService {
 
     try {
       const response = await firstValueFrom(
-        this.http.post<string>(`/api/tour/${newTour.userGuid}`, {
+        this.http.post<TourDto>(`/api/tour/${newTour.userGuid}`, {
           userGuid: newTour.userGuid,
           name: newTour.name,
           description: newTour.description,
@@ -52,9 +57,41 @@ export class TourService {
         }),
       );
 
-      this._tours.update((tours) => [newTour, ...tours]);
+      debugger;
+
+      const createdTour: Tour = {
+        tourGuid: response.tourGuid,
+        userGuid: response.userGuid,
+        name: response.name,
+        description: response.description,
+        from: response.from,
+        to: response.to,
+        transportType: response.transportName as Transport,
+        tourDistance: response.tourDistanceInMeters,
+        estimatedTimeMinutes: response.estimatedTimeMinutes,
+        rating: response.rating,
+        tourLogs: Array.isArray(response.tourLogs) ? (response.tourLogs ?? []).map(
+          (log): TourLog => ({
+            tourLogGuid: log.tourLogGuid,
+            tourGuid: log.tourGuid,
+            dateTime: new Date(log.timestamp),
+            comment: log.comment,
+            difficulty: log.difficulty,
+            totalDistance: log.totalDistanceInMeters,
+            totalTime: log.totalTimeMin,
+            rating: log.rating,
+          }),
+        ) : [],
+      };
+
+      this._tours.update((tours) => [createdTour, ...tours]);
+
+      console.log('ALL TOURS:', this._tours());
+      console.log('CURRENT USER:', this.appState.currentUser());
+
       this.persistToStorage();
 
+      return true;
     }
     catch (error) {
       if (error instanceof HttpErrorResponse) {
@@ -62,6 +99,7 @@ export class TourService {
       } else {
         this.error.set('An unknown error occurred.');
       }
+      return false;
     } finally {
       this.isLoading.set(false);
     }
@@ -164,7 +202,11 @@ export class TourService {
    */
   async loadToursFromBackend(): Promise<void> {
     this.isLoading.set(true);
+    this.error.set(null);
+
     try {
+
+
       // Simulate network delay
       await new Promise((res) => setTimeout(res, 500));
 

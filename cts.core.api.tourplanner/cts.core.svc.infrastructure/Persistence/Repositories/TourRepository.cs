@@ -48,7 +48,7 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
             .FirstOrDefaultAsync(t => t.TourGuid == tourGuid);
     }
 
-    public async Task<ActionResult<Guid>> CreateTour(Guid userGuid, TourCmd tour, double distanceInMeters, int estimatedTimeMin)
+    public async Task<ActionResult<Tour>> CreateTour(Guid userGuid, TourCmd tour, double distanceInMeters, int estimatedTimeMin)
     {
         var user = await db.Users.FirstOrDefaultAsync(u  => u.UserGuid == userGuid);
         
@@ -71,10 +71,10 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
         var createdTour = db.Tours.Add(creatingTour);
         await db.SaveChangesAsync();
 
-        return createdTour.Entity.TourGuid;
+        return createdTour.Entity;
     }
 
-    public async Task<ActionResult<Guid>> UpdateTour(Guid tourGuid, TourCmd updatingTour)
+    public async Task<ActionResult<Tour>> UpdateTour(Guid tourGuid, TourCmd updatingTour)
     {
         var tour = await db.Tours.FirstOrDefaultAsync(t => t.TourGuid == tourGuid);
         
@@ -90,10 +90,10 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
         
         await db.SaveChangesAsync();
 
-        return tour.TourGuid;
+        return tour;
     }
 
-    public async Task<ActionResult<string>> DeleteTour(Guid tourGuid)
+    public async Task<ActionResult<Tour>> DeleteTour(Guid tourGuid)
     {
         var tour = await db.Tours.FirstOrDefaultAsync(t => t.TourGuid == tourGuid);
         
@@ -104,6 +104,6 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
 
         var deletedTour = db.Tours.Remove(tour);
         await db.SaveChangesAsync();
-        return deletedTour.Entity.Name;
+        return deletedTour.Entity;
     }
 }

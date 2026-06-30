@@ -27,7 +27,7 @@ public class TourService : ITourService
     {
         var tour = await this.tourRepository.GetTour(tourGuid);
         
-        if (tour?.Value is null)
+        if (tour.Value is null)
             throw new KeyNotFoundException($"Tour with Guid {tourGuid} not found.");
 
         var tourDto = tour.Value;
@@ -56,7 +56,7 @@ public class TourService : ITourService
         );
     }
 
-    public async Task<ActionResult<Guid>> CreateTour(Guid userGuid, TourCmd tour)
+    public async Task<ActionResult<TourDto>> CreateTour(Guid userGuid, TourCmd tour)
     {
         var transport = await this.transportRepository.GetTransportTypeByName(tour.TransportName);
         
@@ -65,16 +65,85 @@ public class TourService : ITourService
         
         var routeResult = await this.routeService.GetRouteAsync(tour.From, tour.To, transport.OpenRouteProfile);
         
-        return await this.tourRepository.CreateTour(userGuid, tour, routeResult.DistanceInMeters, routeResult.EstimatedTimeMin);
+        var createdTour = await this.tourRepository.CreateTour(userGuid, tour, routeResult.DistanceInMeters, routeResult.EstimatedTimeMin);
+
+        if (createdTour.Value is null)
+            throw new KeyNotFoundException($"Tour could not be created for user with Guid {userGuid}.");
+        
+        return new TourDto(
+            createdTour.Value.TourGuid,
+            createdTour.Value.User.UserGuid,
+            createdTour.Value.Name,
+            createdTour.Value.Description,
+            createdTour.Value.From,
+            createdTour.Value.To,
+            createdTour.Value.Transport.Name,
+            createdTour.Value.TourDistanceInMeters,
+            createdTour.Value.EstimatedTimeMinutes,
+            createdTour.Value.Rating,
+            []
+        );
     }
 
-    public async Task<ActionResult<Guid>> UpdateTour(Guid tourGuid, TourCmd tour)
+    public async Task<ActionResult<TourDto>> UpdateTour(Guid tourGuid, TourCmd tour)
     {
-        return await this.tourRepository.UpdateTour(tourGuid, tour);
+        var updatedTour = await this.tourRepository.UpdateTour(tourGuid, tour);
+
+        if (updatedTour.Value is null)
+            throw new KeyNotFoundException($"Tour could not be updated for tour with Guid {tourGuid}.");
+        
+        return new TourDto(
+            updatedTour.Value.TourGuid,
+            updatedTour.Value.User.UserGuid,
+            updatedTour.Value.Name,
+            updatedTour.Value.Description,
+            updatedTour.Value.From,
+            updatedTour.Value.To,
+            updatedTour.Value.Transport.Name,
+            updatedTour.Value.TourDistanceInMeters,
+            updatedTour.Value.EstimatedTimeMinutes,
+            updatedTour.Value.Rating,
+            updatedTour.Value.TourLogs.Select(log => new TourLogDto(
+                log.TourLogGuid,
+                log.Tour.TourGuid,
+                log.Timestamp,
+                log.Comment,
+                log.Difficulty,
+                log.TotalDistanceInMeters,
+                log.TotalTimeMin,
+                log.Rating
+            )).ToList()
+        );
     }
 
-    public async Task<ActionResult<string>> DeleteTour(Guid tourGuid)
+    public async Task<ActionResult<TourDto>> DeleteTour(Guid tourGuid)
     {
-        return await this.tourRepository.DeleteTour(tourGuid);
+        var deletedTour = await this.tourRepository.DeleteTour(tourGuid);
+
+        if (deletedTour.Value is null)
+            throw new KeyNotFoundException($"Tour could not be deleted for tour with Guid {tourGuid}.");
+        
+        return new TourDto(
+            deletedTour.Value.TourGuid,
+            deletedTour.Value.User.UserGuid,
+            deletedTour.Value.Name,
+            deletedTour.Value.Description,
+            deletedTour.Value.From,
+            deletedTour.Value.To,
+            deletedTour.Value.Transport.Name,
+            deletedTour.Value.TourDistanceInMeters,
+            deletedTour.Value.EstimatedTimeMinutes,
+            deletedTour.Value.Rating,
+            deletedTour.Value.TourLogs.Select(log => new TourLogDto(
+                log.TourLogGuid,
+                log.Tour.TourGuid,
+                log.Timestamp,
+                log.Comment,
+                log.Difficulty,
+                log.TotalDistanceInMeters,
+                log.TotalTimeMin,
+                log.Rating
+            )).ToList()
+        );
     }
 }

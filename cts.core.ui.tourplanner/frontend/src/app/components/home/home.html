@@ -63,9 +63,9 @@
                 <span
                   class="badge"
                   [class.badge-bike]="tour.transportType === Transport.Bike"
-                  [class.badge-foot]="tour.transportType === Transport.Foot"
+                  [class.badge-foot]="tour.transportType === Transport.Hiking"
                   [class.badge-car]="tour.transportType === Transport.Car"
-                  [class.badge-public]="tour.transportType === Transport.PublicTransport"
+                  [class.badge-public]="tour.transportType === Transport.Running"
                 >
                   {{ tour.transportType }}
                 </span>

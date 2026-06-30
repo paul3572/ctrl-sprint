@@ -7,7 +7,7 @@ public interface ITourService
 {
     Task<ActionResult<List<TourDto>>> GetToursOfUser(Guid userGuid);
     Task<ActionResult<TourDto>> GetTour(Guid tourGuid);
-    Task<ActionResult<Guid>> CreateTour(Guid userGuid, TourCmd tour);
-    Task<ActionResult<Guid>> UpdateTour(Guid tourGuid, TourCmd tour);
-    Task<ActionResult<string>> DeleteTour(Guid tourGuid);
+    Task<ActionResult<TourDto>> CreateTour(Guid userGuid, TourCmd tour);
+    Task<ActionResult<TourDto>> UpdateTour(Guid tourGuid, TourCmd tour);
+    Task<ActionResult<TourDto>> DeleteTour(Guid tourGuid);
 }

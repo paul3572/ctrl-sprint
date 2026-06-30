@@ -51,12 +51,11 @@ public class TourController : ControllerBase, ITourController
     [HttpPost("{userGuid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<GuidDto>> CreateTour(Guid userGuid, TourCmd tour)
+    public async Task<ActionResult<TourDto>> CreateTour(Guid userGuid, TourCmd tour)
     {
         try
         {
-            var createdTour = await this.tourService.CreateTour(userGuid, tour);
-            return Ok(new GuidDto(createdTour.Value));
+            return Ok(await this.tourService.CreateTour(userGuid, tour));
         }
         catch (ValidationException e)
         {
@@ -71,12 +70,11 @@ public class TourController : ControllerBase, ITourController
     [HttpPatch("{tourGuid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<GuidDto>> UpdateTour(Guid tourGuid, TourCmd tour)
+    public async Task<ActionResult<TourDto>> UpdateTour(Guid tourGuid, TourCmd tour)
     {
         try
         {
-            var updatedTour = await this.tourService.UpdateTour(tourGuid, tour);
-            return Ok(new GuidDto(updatedTour.Value));
+            return Ok(await this.tourService.UpdateTour(tourGuid, tour));
         }
         catch  (Exception ex)
         {
@@ -87,7 +85,7 @@ public class TourController : ControllerBase, ITourController
     [HttpDelete("{tourGuid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<string>> DeleteTour(Guid tourGuid)
+    public async Task<ActionResult<TourDto>> DeleteTour(Guid tourGuid)
     {
         try
         {

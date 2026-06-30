@@ -68,9 +68,15 @@ export class Home {
     this.showCreateModal.set(true);
   }
 
-  onTourCreated(tour: Tour) {
+  async onTourCreated(tour: Tour) {
     try {
-      this.tourService.addTour(tour);
+      const success = await this.tourService.addTour(tour);
+
+      if (!success) {
+        this.notifications.error("Something went wrong");
+        return;
+      }
+
       this.showCreateModal.set(false);
       this.notifications.success(`Tour "${tour.name}" created successfully!`);
     } catch (err: any) {
