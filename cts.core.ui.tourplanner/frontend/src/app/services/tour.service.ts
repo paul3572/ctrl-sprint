@@ -89,16 +89,28 @@ export class TourService {
     this.persistToStorage();
   }
 
-  deleteTour(tourGuid: string): void {
+  async deleteTour(tourGuid: string): Promise<void> {
+    this.isLoading.set(true);
+    this.error.set(null);
+
     const currentUser = this.appState.currentUser();
     if (!currentUser) {
       throw new Error('Cannot delete tour: no authenticated user');
     }
 
-    this._tours.update((tours) =>
-      tours.filter((t) => !(t.tourGuid === tourGuid && t.userGuid === currentUser.userGuid)),
-    );
-    this.persistToStorage();
+    try {
+      const response = await firstValueFrom(this.http.delete<TourDto>(`/api/tour/${tourGuid}`));
+
+      await this.loadToursFromBackend();
+    } catch (error) {
+      if (error instanceof HttpErrorResponse) {
+        this.error.set(error.error?.detail ?? error.message);
+      } else {
+        this.error.set('An unknown error occurred.');
+      }
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   addTourLog(tourGuid: string, tourLog: TourLog): void {

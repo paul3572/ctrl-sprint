@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using cts.core.svc.application.Interfaces;
-using cts.core.svc.contracts;
 using cts.core.svc.contracts.Tours;
 using Microsoft.AspNetCore.Mvc;
 using TourGuideApplication.Interfaces;

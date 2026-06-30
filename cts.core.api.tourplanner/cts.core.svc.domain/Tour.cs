@@ -28,7 +28,7 @@ public class Tour
     
     public Tour()
     {
-        this.User = new User("init", "init", DateTime.Now);
+        this.User = new User("init@test.com", "init", DateTime.Now);
         this.Transport = new Transport("init", "init");
     }
     

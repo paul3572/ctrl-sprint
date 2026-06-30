@@ -23,7 +23,7 @@ public class TourService : ITourService
         return await this.tourRepository.GetToursOfUser(userGuid);
     }
 
-    public async Task<ActionResult<TourDto>> GetTour(Guid tourGuid)
+    public async Task<TourDto> GetTour(Guid tourGuid)
     {
         var tour = await this.tourRepository.GetTour(tourGuid);
         
@@ -56,7 +56,7 @@ public class TourService : ITourService
         );
     }
 
-    public async Task<ActionResult<TourDto>> CreateTour(Guid userGuid, TourCmd tour)
+    public async Task<TourDto> CreateTour(Guid userGuid, TourCmd tour)
     {
         var transport = await this.transportRepository.GetTransportTypeByName(tour.TransportName);
         
@@ -85,7 +85,7 @@ public class TourService : ITourService
         );
     }
 
-    public async Task<ActionResult<TourDto>> UpdateTour(Guid tourGuid, TourCmd tour)
+    public async Task<TourDto> UpdateTour(Guid tourGuid, TourCmd tour)
     {
         var updatedTour = await this.tourRepository.UpdateTour(tourGuid, tour);
 
@@ -116,7 +116,7 @@ public class TourService : ITourService
         );
     }
 
-    public async Task<ActionResult<TourDto>> DeleteTour(Guid tourGuid)
+    public async Task<TourDto> DeleteTour(Guid tourGuid)
     {
         var deletedTour = await this.tourRepository.DeleteTour(tourGuid);
 

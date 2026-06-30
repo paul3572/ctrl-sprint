@@ -96,7 +96,12 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
 
     public async Task<ActionResult<Tour>> DeleteTour(Guid tourGuid)
     {
-        var tour = await db.Tours.FirstOrDefaultAsync(t => t.TourGuid == tourGuid);
+        var tour = await db.Tours
+            .Include(t => t.User)
+            .Include(t => t.Transport)
+            .Include(t => t.TourLogs)
+            .Where(t => t.TourGuid == tourGuid)
+            .FirstOrDefaultAsync();
         
         if (tour is null)
         {
