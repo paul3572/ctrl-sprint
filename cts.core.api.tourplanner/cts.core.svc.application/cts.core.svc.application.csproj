@@ -4,7 +4,8 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-    </PropertyGroup>
+      <UserSecretsId>f72cd91c-b094-49eb-882c-6283cce5e3b0</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.OpenApi" />

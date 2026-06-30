@@ -72,6 +72,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddHttpClient<IRouteService, OpenRouteService>(client =>
 {
+    client.DefaultRequestHeaders.Add("Accept", "application/json, application/geo+json, application/gpx+xml, img/png");
     client.BaseAddress = new Uri("https://api.openrouteservice.org/");
     client.DefaultRequestHeaders.Add("Authorization",
         builder.Configuration["OpenRouteService:ApiKey"] ??

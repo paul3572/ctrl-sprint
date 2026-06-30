@@ -15,7 +15,7 @@ public class OpenRouteServiceTests
             .Build();
 
         var apiKey =
-            config["OpenRouteService:TrimmedApiKey"] ?? throw new InvalidOperationException("OpenRouteService API key is not configured.");
+            config["OpenRouteService:ApiKey"] ?? throw new InvalidOperationException("OpenRouteService API key is not configured.");
 
         var httpClient = new HttpClient
         {
@@ -29,7 +29,7 @@ public class OpenRouteServiceTests
     }
     
     [Test]
-    [Explicit("Requires OpenRouteService API key")]
+    // [Explicit("Requires OpenRouteService API key")]
     public async Task GeocodeAsync_ShouldReturnRealCoordinates_ForVienna()
     {
         var result = await service.GeocodeAsync("Vienna");
@@ -40,16 +40,16 @@ public class OpenRouteServiceTests
     }
     
     [Test]
-    [Explicit("Requires OpenRouteService API key")]
+    // [Explicit("Requires OpenRouteService API key")]
     public async Task GetRouteAsync_ShouldReturnRealRoute()
     {
         var result = await service.GetRouteAsync(
-            "Vienna",
-            "Linz",
+            "Vienna, Austria",
+            "Budapest, Hungary",
             "driving-car");
 
         Assert.That(result.DistanceInMeters, Is.GreaterThan(10000));
-        Assert.That(result.EstimatedTimeMin, Is.GreaterThan(1000));
+        Assert.That(result.EstimatedTimeMin, Is.GreaterThan(60));
         Assert.That(result.Geometry.Count, Is.GreaterThan(1));
     }
 }

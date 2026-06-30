@@ -25,18 +25,12 @@ public class OpenRouteService : IRouteService
 
         RouteRequest request = new()
         {
-            Coordinates =
-            [
-                [start.Longitude, start.Latitude],
-                [end.Longitude, end.Latitude]
-            ]
+            Coordinates = [new RouteCoordinates(start.Longitude, start.Latitude), new RouteCoordinates(end.Longitude, end.Latitude)],
         };
 
         HttpResponseMessage response =
-            await httpClient.PostAsJsonAsync(
-                $"v2/directions/{transportOpenRouteProfile}",
-                request,
-                cancellationToken);
+            await httpClient.GetAsync(
+                $"v2/directions/{transportOpenRouteProfile}?start={start.Longitude},{start.Latitude}&end={end.Longitude},{end.Latitude}", cancellationToken: cancellationToken);
 
         response.EnsureSuccessStatusCode();
 
@@ -62,9 +56,11 @@ public class OpenRouteService : IRouteService
 
     public async Task<GeocodeResult> GeocodeAsync(string city, CancellationToken cancellationToken = default)
     {
+        var apiKey = Environment.GetEnvironmentVariable("OpenRouteService:ApiKey");
+        
         GeocodeResponse? response =
             await httpClient.GetFromJsonAsync<GeocodeResponse>(
-                $"geocode/search?text={Uri.EscapeDataString(city)}&size=1", cancellationToken: cancellationToken);
+                $"geocode/search?api_key={Uri.EscapeDataString(apiKey ?? string.Empty)}&text={Uri.EscapeDataString(city)}&size=1", cancellationToken: cancellationToken);
         
         if (response?.Features == null || response.Features.Count == 0)
         {
