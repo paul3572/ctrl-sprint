@@ -40,6 +40,15 @@ builder.Services
     {
         options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
 
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                context.Token = context.Request.Cookies["access_token"];
+                return Task.CompletedTask;
+            }
+        };
+        
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -69,8 +78,6 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
 });
-
-Console.WriteLine(builder.Configuration["OpenRouteService:ApiKey"]);
 
 builder.Services.AddHttpClient<IRouteService, OpenRouteService>(client =>
 {

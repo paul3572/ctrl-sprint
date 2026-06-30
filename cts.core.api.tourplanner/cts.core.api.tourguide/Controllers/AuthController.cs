@@ -108,13 +108,14 @@ public sealed class AuthController : ControllerBase
     [HttpGet("me")]
     public ActionResult<AuthResponse> GetMe()
     {
-        var userGuidClaim = this.User.FindFirst("sub")?.Value;
-        var emailClaim = this.User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+        var userGuidClaim =
+            User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        var emailClaim =
+            User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
 
         if (userGuidClaim is null || emailClaim is null)
-        {
             return Unauthorized();
-        }
 
         return Ok(new AuthResponse
         {
@@ -133,8 +134,8 @@ public sealed class AuthController : ControllerBase
             UserGuid = result.UserGuid,
             Email = result.Email,
             CreatedAt = result.CreatedAt,
-            AccessToken = result.AccessToken,
-            AccessTokenExpiresAtUtc = result.AccessTokenExpiresAtUtc
+            AccessToken = string.Empty,
+            AccessTokenExpiresAtUtc = result.AccessTokenExpiresAtUtc,
         };
     }
     

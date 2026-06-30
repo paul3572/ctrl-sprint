@@ -49,8 +49,6 @@ export class Home {
   });
 
   constructor() {
-    this.loadToursFromBackend();
-
     effect(() => {
       this.searchQuery();
     });

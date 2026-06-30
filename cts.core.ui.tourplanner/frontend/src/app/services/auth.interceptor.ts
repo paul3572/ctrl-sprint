@@ -1,22 +1,19 @@
-﻿import { Injectable, inject } from '@angular/core';
+﻿import { inject, Injectable } from '@angular/core';
 import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
   HttpInterceptor,
   HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { AppStateService } from './app-state.service';
 import { AppPaths } from '../app.paths';
-import { AuthTokenStore } from './auth-tokenstore.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private router = inject(Router);
-  private tokenStore = inject(AuthTokenStore);
 
   private readonly apiBase = 'http://localhost:8080';
 
@@ -28,16 +25,6 @@ export class AuthInterceptor implements HttpInterceptor {
       });
     } else {
       req = req.clone({ withCredentials: true });
-    }
-
-    const token = this.tokenStore.get();
-
-    if (token) {
-      req = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
     }
 
     return next.handle(req).pipe(

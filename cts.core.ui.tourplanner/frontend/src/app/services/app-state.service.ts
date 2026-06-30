@@ -1,17 +1,17 @@
-﻿import { computed, inject, Injectable, signal } from '@angular/core';
+﻿import { computed, Injectable, signal } from '@angular/core';
 import { User } from '../models/user';
 import { firstValueFrom } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { LoginResponse } from '../contracts/LoginResponse';
-import {AuthTokenStore} from './auth-tokenstore.service';
 
 @Injectable({ providedIn: 'root' })
 export class AppStateService {
   private static readonly SessionCookieName = 'tour-guide_session';
 
-  private tokenStore = inject(AuthTokenStore);
-
   private readonly _user = signal<User | null>(null);
+
+  private _sessionReady = signal(false);
+  readonly sessionReady = this._sessionReady.asReadonly();
 
   readonly currentUser = this._user.asReadonly();
   readonly isAuthenticated = computed(() => this._user() !== null);
@@ -42,18 +42,12 @@ export class AppStateService {
       };
 
       this._user.set(user);
-      this.tokenStore.set(response.accessToken);
 
       return true;
     } catch (error) {
       const err = error as HttpErrorResponse;
 
-      this.error.set(
-        err?.error?.detail ??
-        err?.error?.title ??
-        err?.message ??
-        'Unknown error'
-      );
+      this.error.set(err?.error?.detail ?? err?.error?.title ?? err?.message ?? 'Unknown error');
 
       return false;
     } finally {
@@ -80,7 +74,6 @@ export class AppStateService {
         accessToken: response.accessToken,
       };
 
-      this.tokenStore.set(response.accessToken);
       this._user.set(user);
 
       return true;
@@ -107,70 +100,6 @@ export class AppStateService {
     this.clearCookie();
   }
 
-  private hydrateFromCookie(): void {
-    const raw = this.readCookie(AppStateService.SessionCookieName);
-    if (!raw) {
-      this._user.set(null);
-      return;
-    }
-
-    try {
-      const parsed = JSON.parse(raw) as { guid: string; email: string; createdAt: string; accessToken: string };
-      if (!parsed?.guid || !parsed?.email || !parsed?.createdAt) {
-        this.clearCookie();
-        return;
-      }
-
-      this._user.set({
-        userGuid: parsed.guid,
-        email: parsed.email,
-        createdAt: new Date(parsed.createdAt),
-        accessToken: parsed.accessToken,
-      });
-    } catch {
-      this.clearCookie();
-      this._user.set(null);
-    }
-  }
-
-  private persistToCookie(user: User): void {
-    if (typeof document === 'undefined') {
-      return;
-    }
-
-    const expires = new Date();
-    expires.setDate(expires.getDate() + 7);
-
-    const payload = encodeURIComponent(
-      JSON.stringify({
-        guid: user.userGuid,
-        email: user.email,
-        createdAt: user.createdAt.toISOString(),
-        accessToken: user.accessToken,
-      }),
-    );
-
-    document.cookie = `${AppStateService.SessionCookieName}=${payload}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
-  }
-
-  private readCookie(name: string): string | null {
-    if (typeof document === 'undefined') {
-      return null;
-    }
-
-    const prefix = `${name}=`;
-    const cookie = document.cookie
-      .split(';')
-      .map((part) => part.trim())
-      .find((part) => part.startsWith(prefix));
-
-    if (!cookie) {
-      return null;
-    }
-
-    return decodeURIComponent(cookie.substring(prefix.length));
-  }
-
   private clearCookie(): void {
     if (typeof document === 'undefined') {
       return;
@@ -181,9 +110,7 @@ export class AppStateService {
 
   async restoreSession(): Promise<void> {
     try {
-      const response = await firstValueFrom(
-        this.http.get<LoginResponse>('/api/auth/me')
-      );
+      const response = await firstValueFrom(this.http.get<LoginResponse>('/api/auth/me'));
 
       const user: User = {
         userGuid: response.userGuid,
@@ -195,6 +122,8 @@ export class AppStateService {
       this._user.set(user);
     } catch {
       this._user.set(null);
+    } finally {
+      this._sessionReady.set(true);
     }
   }
 }
