@@ -107,106 +107,106 @@
           <h2>Tour Information</h2>
           <div [formGroup]="editForm" class="info-grid">
             <div class="info-item">
-            <label>From</label>
-            @if (!isEditing()) {
-              <div class="info-value">{{ tour()?.from }}</div>
-            } @else {
-              <input
-                type="text"
-                formControlName="from"
-                placeholder="Starting point"
-                class="form-input"
-              />
-              @if (isEditing() && editForm.get('from')?.touched && editForm.get('from')?.invalid) {
-                <div class="error">{{ getErrorMessage('from') }}</div>
-              }
-            }
-            </div>
-
-            <div class="info-item">
-            <label>To</label>
-            @if (!isEditing()) {
-              <div class="info-value">{{ tour()?.to }}</div>
-            } @else {
-              <input
-                type="text"
-                formControlName="to"
-                placeholder="Destination"
-                class="form-input"
-              />
-              @if (isEditing() && editForm.get('to')?.touched && editForm.get('to')?.invalid) {
-                <div class="error">{{ getErrorMessage('to') }}</div>
-              }
-            }
-            </div>
-
-            <div class="info-item">
-            <label>Transport Type</label>
-            @if (!isEditing()) {
-              <div class="info-value">{{ tour()?.transportType | titlecase }}</div>
-            } @else {
-              <select
-                formControlName="transportType"
-                class="form-select"
-              >
-                @for (type of transportTypes; track type) {
-                  <option [value]="type">
-                    {{ type | titlecase }}
-                  </option>
+              <label>From</label>
+              @if (!isEditing()) {
+                <div class="info-value">{{ tour()?.from }}</div>
+              } @else {
+                <input
+                  type="text"
+                  formControlName="from"
+                  placeholder="Starting point"
+                  class="form-input"
+                />
+                @if (isEditing() && editForm.get('from')?.touched && editForm.get('from')?.invalid) {
+                  <div class="error">{{ getErrorMessage('from') }}</div>
                 }
-              </select>
-            }
+              }
             </div>
 
             <div class="info-item">
-            <label>Distance (km)</label>
-            @if (!isEditing()) {
-              <div class="info-value">{{ tour()?.tourDistance }}</div>
-            }
+              <label>To</label>
+              @if (!isEditing()) {
+                <div class="info-value">{{ tour()?.to }}</div>
+              } @else {
+                <input
+                  type="text"
+                  formControlName="to"
+                  placeholder="Destination"
+                  class="form-input"
+                />
+                @if (isEditing() && editForm.get('to')?.touched && editForm.get('to')?.invalid) {
+                  <div class="error">{{ getErrorMessage('to') }}</div>
+                }
+              }
             </div>
 
             <div class="info-item">
-            <label>Est. Time (min)</label>
-            @if (!isEditing()) {
-              <div class="info-value">{{ tour()?.estimatedTimeMinutes }}</div>
-            }
+              <label>Transport Type</label>
+              @if (!isEditing()) {
+                <div class="info-value">{{ tour()?.transportType | titlecase }}</div>
+              } @else {
+                <select
+                  formControlName="transportType"
+                  class="form-select"
+                >
+                  @for (type of transportTypes; track type) {
+                    <option [value]="type">
+                      {{ type | titlecase }}
+                    </option>
+                  }
+                </select>
+              }
+            </div>
+
+            <div class="info-item">
+              @if (!isEditing()) {
+                <label>Distance (km)</label>
+                <div class="info-value">{{ tour()?.tourDistance }}</div>
+              }
+            </div>
+
+            <div class="info-item">
+              @if (!isEditing()) {
+                <label>Est. Time (min)</label>
+                <div class="info-value">{{ tour()?.estimatedTimeMinutes }}</div>
+              }
             </div>
 
             <div class="info-item info-full">
-            <label>Description</label>
-            @if (!isEditing()) {
-              <div class="info-value">
-                {{ tour()?.description || 'No description' }}
-              </div>
-            } @else {
-              <textarea
-                formControlName="description"
-                placeholder="Optional tour description..."
-                class="form-textarea"
-                rows="3"
-              ></textarea>
-            }
+              <label>Description</label>
+              @if (!isEditing()) {
+                <div class="info-value">
+                  {{ tour()?.description || 'No description' }}
+                </div>
+              } @else {
+                <textarea
+                  formControlName="description"
+                  placeholder="Optional tour description..."
+                  class="form-textarea"
+                  rows="3"
+                ></textarea>
+              }
             </div>
 
             <div class="info-item">
-            <label>Rating</label>
-            @if (!isEditing()) {
-              <div class="info-value">
-                {{ tour()?.rating }}/5 ⭐
-              </div>
-            } @else {
-              <input
-                type="number"
-                min="0"
-                max="5"
-                formControlName="rating"
-                placeholder="0"
-                class="form-input"
-              />
-              @if (isEditing() && editForm.get('rating')?.touched && editForm.get('rating')?.invalid) {
-                <div class="error">{{ getErrorMessage('rating') }}</div>
+              <label>Rating</label>
+              @if (!isEditing()) {
+                <div class="info-value">
+                  {{ tour()?.rating }}/5 ⭐
+                </div>
+              } @else {
+                <input
+                  type="number"
+                  min="0"
+                  max="5"
+                  formControlName="rating"
+                  placeholder="0"
+                  class="form-input"
+                />
+                @if (isEditing() && editForm.get('rating')?.touched && editForm.get('rating')?.invalid) {
+                  <div class="error">{{ getErrorMessage('rating') }}</div>
+                }
               }
-            }
             </div>
           </div>
         </section>

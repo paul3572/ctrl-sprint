@@ -44,8 +44,8 @@ export class TourDetail implements OnInit {
     this.editForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: [''],
-      from: ['', [Validators.required]],
-      to: ['', [Validators.required]],
+      from: [{ value: '', disabled: true }, [Validators.required]],
+      to: [{ value: '', disabled: true }, [Validators.required]],
       transportType: [Transport.Car, [Validators.required]],
       rating: [0, [Validators.required, Validators.min(0), Validators.max(5)]],
     });
@@ -101,7 +101,10 @@ export class TourDetail implements OnInit {
 
     this.isSubmitting.set(true);
     try {
-      const updatedTour = await this.tourService.updateTour(currentTour.tourGuid, this.editForm.value);
+      const updatedTour = await this.tourService.updateTour(
+        currentTour.tourGuid,
+        this.editForm.value,
+      );
       if (updatedTour) {
         this.tour.set(updatedTour);
       }
