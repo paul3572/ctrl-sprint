@@ -26,9 +26,7 @@ export class TourService {
   });
 
   constructor(private readonly appState: AppStateService,
-              private readonly http: HttpClient) {
-    this.hydrateFromStorage();
-  }
+              private readonly http: HttpClient) {}
 
   async addTour(tour: Tour): Promise<boolean> {
     this.isLoading.set(true);
@@ -57,32 +55,7 @@ export class TourService {
         }),
       );
 
-      debugger;
-
-      const createdTour: Tour = {
-        tourGuid: response.tourGuid,
-        userGuid: response.userGuid,
-        name: response.name,
-        description: response.description,
-        from: response.from,
-        to: response.to,
-        transportType: response.transportName as Transport,
-        tourDistance: response.tourDistanceInMeters,
-        estimatedTimeMinutes: response.estimatedTimeMinutes,
-        rating: response.rating,
-        tourLogs: Array.isArray(response.tourLogs) ? (response.tourLogs ?? []).map(
-          (log): TourLog => ({
-            tourLogGuid: log.tourLogGuid,
-            tourGuid: log.tourGuid,
-            dateTime: new Date(log.timestamp),
-            comment: log.comment,
-            difficulty: log.difficulty,
-            totalDistance: log.totalDistanceInMeters,
-            totalTime: log.totalTimeMin,
-            rating: log.rating,
-          }),
-        ) : [],
-      };
+      const createdTour: Tour = this.mapTourDto(response);
 
       this._tours.update((tours) => [createdTour, ...tours]);
 
@@ -200,101 +173,39 @@ export class TourService {
    * Later: replace with HttpClient.get('/api/tours')
    * Merges backend tours with locally created tours (by tourGuid).
    */
-  async loadToursFromBackend(): Promise<void> {
+  async loadToursFromBackend(): Promise<boolean> {
     this.isLoading.set(true);
     this.error.set(null);
 
     try {
+      this.isLoading.set(true);
+      this.error.set(null);
 
+      const currentUser = this.appState.currentUser();
 
-      // Simulate network delay
-      await new Promise((res) => setTimeout(res, 500));
+      if (!currentUser) {
+        throw new Error('Cannot load tours: no authenticated user');
+      }
 
-      // Mock backend response: all tours from all users
-      const backendTours: Tour[] = this.getMockTourData();
-      const existingTours = this._tours();
+      const response = await firstValueFrom(
+        this.http.get<TourDto[]>(`/api/tour?userGuid=${currentUser.userGuid}`),
+      );
 
-      // Merge: keep existing local tours + add backend tours not already present
-      const guids = new Set(existingTours.map((t) => t.tourGuid));
-      const newBackendTours = backendTours.filter((t) => !guids.has(t.tourGuid));
-      const merged = [...existingTours, ...newBackendTours];
+      const tours = response.map(dto => this.mapTourDto(dto));
 
-      this._tours.set(merged);
-      this.persistToStorage();
-    } catch (err) {
-      console.error('[TourService] Failed to load tours from backend', err);
-      throw err;
+      this._tours.set(tours);
+
+      return true;
+    } catch (error) {
+      if (error instanceof HttpErrorResponse) {
+        this.error.set(error.error?.detail ?? error.message);
+      } else {
+        this.error.set('An unknown error occurred.');
+      }
+      return false;
     } finally {
       this.isLoading.set(false);
     }
-  }
-
-  /**
-   * Get mock tour data as if from backend API
-   * Uses fixed UUIDs so deduplication works across reloads
-   */
-  private getMockTourData(): Tour[] {
-    const currentUser = this.appState.currentUser();
-    const currentUserGuid = currentUser?.userGuid || 'current-user';
-
-    // Demo: current user's tours + tours from other users
-    // Using fixed UUIDs so mock tours don't multiply on each load
-    const otherUserGuid = 'other-user-demo';
-
-    return [
-      {
-        tourGuid: 'mock-tour-danube-bike-001',
-        userGuid: currentUserGuid,
-        name: 'Danube River Bike Tour',
-        description: 'Scenic bike ride along the Danube.',
-        from: 'Vienna City Center',
-        to: 'Greifenstein',
-        transportType: Transport.Bike,
-        tourDistance: 42.5,
-        estimatedTimeMinutes: 180,
-        rating: 4,
-        tourLogs: [],
-      },
-      {
-        tourGuid: 'mock-tour-alpine-hike-002',
-        userGuid: currentUserGuid,
-        name: 'Alpine Hike',
-        description: 'Challenging hike with mountain views.',
-        from: 'Karsee Lake',
-        to: 'Zugspitze Peak',
-        transportType: Transport.Car,
-        tourDistance: 16.2,
-        estimatedTimeMinutes: 480,
-        rating: 5,
-        tourLogs: [],
-      },
-      {
-        tourGuid: 'mock-tour-city-run-003',
-        userGuid: otherUserGuid,
-        name: 'City Running Route',
-        description: 'Fast-paced urban running circuit.',
-        from: 'City Center',
-        to: 'City Center',
-        transportType: Transport.Bike,
-        tourDistance: 10.0,
-        estimatedTimeMinutes: 45,
-        rating: 3,
-        tourLogs: [],
-      },
-      {
-        tourGuid: 'mock-tour-weekend-getaway-004',
-        userGuid: otherUserGuid,
-        name: 'Weekend Getaway',
-        description: 'Relaxing vacation route.',
-        from: 'Home Town',
-        to: 'Beach Resort',
-        transportType: Transport.Car,
-        tourDistance: 250.0,
-        estimatedTimeMinutes: 180,
-        rating: 4,
-        tourLogs: [],
-      },
-    ];
   }
 
   private hydrateFromStorage(): void {
@@ -326,6 +237,31 @@ export class TourService {
     } catch (err) {
       console.error('[TourService] Failed to persist tours to storage', err);
     }
+  }
+
+  private mapTourDto(dto: TourDto): Tour {
+    return {
+      tourGuid: dto.tourGuid,
+      userGuid: dto.userGuid,
+      name: dto.name,
+      description: dto.description,
+      from: dto.from,
+      to: dto.to,
+      transportType: dto.transportName as Transport,
+      tourDistance: dto.tourDistanceInMeters,
+      estimatedTimeMinutes: dto.estimatedTimeMinutes,
+      rating: dto.rating,
+      tourLogs: (dto.tourLogs ?? []).map((log): TourLog => ({
+        tourLogGuid: log.tourLogGuid,
+        tourGuid: log.tourGuid,
+        dateTime: new Date(log.timestamp),
+        comment: log.comment,
+        difficulty: log.difficulty,
+        totalDistance: log.totalDistanceInMeters,
+        totalTime: log.totalTimeMin,
+        rating: log.rating
+      }))
+    };
   }
 }
 

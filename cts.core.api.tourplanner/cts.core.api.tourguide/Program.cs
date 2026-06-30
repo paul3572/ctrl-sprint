@@ -92,8 +92,11 @@ using (var scope = app.Services.CreateScope())
 {
     using (var db = scope.ServiceProvider.GetRequiredService<TourPlannerDbContext>())
     {
-        db.Initialize(deleteDatabase: true);
-        db.Seed();
+        const bool deleteDatabase = false;
+        
+        db.Initialize(deleteDatabase: deleteDatabase);
+        if (deleteDatabase)
+            db.Seed();
     }
 }
 

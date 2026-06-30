@@ -18,7 +18,7 @@ public class TourService : ITourService
         this.transportRepository = transportRepository;
     }
 
-    public async Task<ActionResult<List<TourDto>>> GetToursOfUser(Guid userGuid)
+    public async Task<List<TourDto>> GetToursOfUser(Guid userGuid)
     {
         return await this.tourRepository.GetToursOfUser(userGuid);
     }

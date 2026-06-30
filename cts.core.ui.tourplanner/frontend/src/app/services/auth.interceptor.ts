@@ -11,11 +11,12 @@ import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { AppStateService } from './app-state.service';
 import { AppPaths } from '../app.paths';
+import { AuthTokenStore } from './auth-tokenstore.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private router = inject(Router);
-  private auth = inject(AppStateService);
+  private tokenStore = inject(AuthTokenStore);
 
   private readonly apiBase = 'http://localhost:8080';
 
@@ -29,7 +30,7 @@ export class AuthInterceptor implements HttpInterceptor {
       req = req.clone({ withCredentials: true });
     }
 
-    const token = this.auth.currentUser()?.accessToken;
+    const token = this.tokenStore.get();
 
     if (token) {
       req = req.clone({

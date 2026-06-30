@@ -1,12 +1,15 @@
-﻿import { computed, Injectable, signal } from '@angular/core';
+﻿import { computed, inject, Injectable, signal } from '@angular/core';
 import { User } from '../models/user';
 import { firstValueFrom } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { LoginResponse } from '../contracts/LoginResponse';
+import {AuthTokenStore} from './auth-tokenstore.service';
 
 @Injectable({ providedIn: 'root' })
 export class AppStateService {
   private static readonly SessionCookieName = 'tour-guide_session';
+
+  private tokenStore = inject(AuthTokenStore);
 
   private readonly _user = signal<User | null>(null);
 
@@ -16,7 +19,7 @@ export class AppStateService {
   readonly error = signal<string | null>(null);
 
   constructor(private readonly http: HttpClient) {
-    this.hydrateFromCookie();
+    this.restoreSession();
   }
 
   async login(email: string, password: string): Promise<boolean> {
@@ -39,15 +42,18 @@ export class AppStateService {
       };
 
       this._user.set(user);
-      this.persistToCookie(user);
+      this.tokenStore.set(response.accessToken);
 
       return true;
     } catch (error) {
-      if (error instanceof HttpErrorResponse) {
-        this.error.set(error.error?.detail ?? error.message);
-      } else {
-        this.error.set('An unknown error occurred.');
-      }
+      const err = error as HttpErrorResponse;
+
+      this.error.set(
+        err?.error?.detail ??
+        err?.error?.title ??
+        err?.message ??
+        'Unknown error'
+      );
 
       return false;
     } finally {
@@ -74,8 +80,8 @@ export class AppStateService {
         accessToken: response.accessToken,
       };
 
+      this.tokenStore.set(response.accessToken);
       this._user.set(user);
-      this.persistToCookie(user);
 
       return true;
     } catch (error) {
@@ -171,5 +177,24 @@ export class AppStateService {
     }
 
     document.cookie = `${AppStateService.SessionCookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;
+  }
+
+  async restoreSession(): Promise<void> {
+    try {
+      const response = await firstValueFrom(
+        this.http.get<LoginResponse>('/api/auth/me')
+      );
+
+      const user: User = {
+        userGuid: response.userGuid,
+        email: response.email,
+        createdAt: new Date(response.createdAt),
+        accessToken: response.accessToken,
+      };
+
+      this._user.set(user);
+    } catch {
+      this._user.set(null);
+    }
   }
 }

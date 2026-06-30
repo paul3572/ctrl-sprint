@@ -39,6 +39,8 @@ public sealed class AuthController : ControllerBase
                     request.Email,
                     request.Password),
                 cancellationToken);
+            
+            this.SetAuthCookie(result);
 
             return Ok(ToResponse(result));
         }
@@ -86,6 +88,8 @@ public sealed class AuthController : ControllerBase
                     request.Email,
                     request.Password),
                 cancellationToken);
+            
+            this.SetAuthCookie(result);
 
             return Ok(ToResponse(result));
         }
@@ -99,6 +103,28 @@ public sealed class AuthController : ControllerBase
             });
         }
     }
+    
+    [Authorize]
+    [HttpGet("me")]
+    public ActionResult<AuthResponse> GetMe()
+    {
+        var userGuidClaim = this.User.FindFirst("sub")?.Value;
+        var emailClaim = this.User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+
+        if (userGuidClaim is null || emailClaim is null)
+        {
+            return Unauthorized();
+        }
+
+        return Ok(new AuthResponse
+        {
+            UserGuid = Guid.Parse(userGuidClaim),
+            Email = emailClaim,
+            CreatedAt = default,
+            AccessToken = string.Empty,
+            AccessTokenExpiresAtUtc = default
+        });
+    }
 
     private static AuthResponse ToResponse(AuthenticationResult result)
     {
@@ -110,5 +136,16 @@ public sealed class AuthController : ControllerBase
             AccessToken = result.AccessToken,
             AccessTokenExpiresAtUtc = result.AccessTokenExpiresAtUtc
         };
+    }
+    
+    private void SetAuthCookie(AuthenticationResult result)
+    {
+        Response.Cookies.Append("access_token", result.AccessToken, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = false, // only dev
+            SameSite = SameSiteMode.Lax,
+            Expires = result.AccessTokenExpiresAtUtc.UtcDateTime
+        });
     }
 }

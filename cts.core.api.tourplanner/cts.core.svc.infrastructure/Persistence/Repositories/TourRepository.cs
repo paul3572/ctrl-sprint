@@ -9,12 +9,13 @@ namespace cts.core.svc.infrastructure.Persistence.Repositories;
 
 public class TourRepository(ITransportRepository transportRepo, TourPlannerDbContext db) : ITourRepository
 {
-    public async Task<ActionResult<List<TourDto>>> GetToursOfUser(Guid userGuid)
+    public async Task<List<TourDto>> GetToursOfUser(Guid userGuid)
     {
         return await db.Tours
             .Include(t => t.User)
             .Include(t => t.Transport)
             .Include(t => t.TourLogs)
+            .Where(t => t.User.UserGuid == userGuid)
             .Select(t => new TourDto(
                 t.TourGuid,
                 t.User.UserGuid,
