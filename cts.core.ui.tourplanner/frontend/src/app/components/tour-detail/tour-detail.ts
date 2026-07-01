@@ -216,7 +216,7 @@ export class TourDetail implements OnInit {
     const q = this.searchQuery().trim().toLowerCase();
     if (!q) return logs;
     return logs.filter((l) => {
-      const dateStr = new Date(l.dateTime).toLocaleString().toLowerCase();
+      const dateStr = new Date(l.timestamp).toLocaleString().toLowerCase();
       const comment = (l.comment || '').toLowerCase();
       const rating = String(l.rating);
       return dateStr.includes(q) || comment.includes(q) || rating.includes(q);
@@ -258,9 +258,9 @@ export class TourDetail implements OnInit {
 
     const avgDifficulty = logs.reduce((s, l) => s + l.difficulty, 0) / logs.length;
 
-    const avgTime = logs.reduce((s, l) => s + l.totalTime, 0) / logs.length;
+    const avgTime = logs.reduce((s, l) => s + l.totalTimeMin, 0) / logs.length;
 
-    const avgDistance = logs.reduce((s, l) => s + l.totalDistance, 0) / logs.length;
+    const avgDistance = logs.reduce((s, l) => s + l.totalDistanceInMeters, 0) / logs.length;
 
     let stars = 5;
 

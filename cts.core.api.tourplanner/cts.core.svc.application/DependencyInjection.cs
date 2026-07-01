@@ -14,6 +14,7 @@ public static class DependencyInjection
         services.AddScoped<LoginAuthService>();
         services.AddScoped<ITransportService, TransportService>();
         services.AddScoped<ITourService, TourService>();
+        services.AddScoped<ITourLogService, TourLogService>();
         services.AddScoped<IWeatherService, OpenMeteoService>();
 
         return services;

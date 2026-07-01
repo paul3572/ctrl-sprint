@@ -6,9 +6,9 @@ namespace cts.core.svc.application.Interfaces;
 
 public interface ITourLogRepository
 {
-    Task<ActionResult<List<TourLogDto>>> GetToursLogsOfTour(Guid tourGuid);
-    Task<ActionResult<TourLogDto?>> GetTourLog(Guid tourLogGuid);
-    Task<ActionResult<GuidDto>> CreateTourLog(Guid tourGuid, TourLogCmd tourLog);
-    Task<ActionResult<GuidDto>> UpdateTourLog(Guid tourLogGuid, TourLogCmd tourLog);
-    Task<ActionResult<GuidDto>> DeleteTourLog(Guid tourLogGuid);
+    Task<List<TourLogDto>> GetToursLogsOfTour(Guid tourGuid);
+    Task<TourLogDto?> GetTourLog(Guid tourLogGuid);
+    Task<TourLogDto> CreateTourLog(Guid tourGuid, TourLogCmd tourLog);
+    Task<TourLogDto> UpdateTourLog(Guid tourLogGuid, TourLogCmd tourLog);
+    Task<TourLogDto> DeleteTourLog(Guid tourLogGuid);
 }

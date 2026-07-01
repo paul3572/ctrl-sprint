@@ -6,6 +6,7 @@ import { AppStateService } from './app-state.service';
 import { firstValueFrom } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { TourDto } from '../contracts/TourDto';
+import {TourLogDto} from '../contracts/TourLogDto';
 
 @Injectable({ providedIn: 'root' })
 export class TourService {
@@ -136,44 +137,92 @@ export class TourService {
     }
   }
 
-  addTourLog(tourGuid: string, tourLog: TourLog): void {
+  async addTourLog(tourGuid: string, tourLog: TourLog): Promise<void> {
+    this.isLoading.set(true);
+    this.error.set(null);
+
     const currentUser = this.appState.currentUser();
     if (!currentUser) {
-      throw new Error('Cannot add tour log: no authenticated user');
+      throw new Error('Cannot add tour: no authenticated user');
     }
 
-    this._tours.update((tours) =>
-      tours.map((t) => {
-        if (t.tourGuid === tourGuid && t.userGuid === currentUser.userGuid) {
-          return {
-            ...t,
-            tourLogs: [tourLog, ...(t.tourLogs ?? [])],
-          };
-        }
-        return t;
-      }),
-    );
-    this.persistToStorage();
+    try {
+      const response = await firstValueFrom(
+        this.http.post<TourLog>(`/api/tourlog/${tourGuid}`, {
+          tourGuid: tourGuid,
+          timestamp: tourLog.timestamp.toISOString(),
+          comment: tourLog.comment,
+          difficulty: tourLog.difficulty,
+          totalDistanceInMeters: tourLog.totalDistanceInMeters,
+          totalTimeMin: tourLog.totalTimeMin,
+          rating: tourLog.rating,
+        }),
+      );
+
+      const newTourLog: TourLog = {
+        ...response,
+      };
+
+      this._tours.update((tours) =>
+        tours.map((t) => {
+          if (t.tourGuid === tourGuid && t.userGuid === currentUser.userGuid) {
+            return {
+              ...t,
+              tourLogs: [newTourLog, ...(t.tourLogs ?? [])],
+            };
+          }
+          return t;
+        }),
+      );
+    } catch (error) {
+      if (error instanceof HttpErrorResponse) {
+        this.error.set(error.error?.detail ?? error.message);
+      } else {
+        this.error.set('An unknown error occurred.');
+      }
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
-  deleteTourLog(tourGuid: string, tourLogGuid: string): void {
+  async deleteTourLog(tourGuid: string, tourLogGuid: string): Promise<void> {
+    this.isLoading.set(true);
+    this.error.set(null);
+
     const currentUser = this.appState.currentUser();
     if (!currentUser) {
       throw new Error('Cannot delete tour log: no authenticated user');
     }
 
-    this._tours.update((tours) =>
-      tours.map((t) => {
-        if (t.tourGuid === tourGuid && t.userGuid === currentUser.userGuid) {
-          return {
-            ...t,
-            tourLogs: t.tourLogs?.filter((log) => log.tourLogGuid !== tourLogGuid) ?? [],
-          };
-        }
-        return t;
-      }),
-    );
-    this.persistToStorage();
+    try {
+      const response = await firstValueFrom(
+        this.http.delete<TourLog>(`/api/tourlog/${tourLogGuid}`),
+      );
+
+      const deletedTourLog: TourLog = {
+        ...response,
+      };
+
+      this._tours.update((tours) =>
+        tours.map((t) => {
+          if (t.tourGuid === tourGuid && t.userGuid === currentUser.userGuid) {
+            return {
+              ...t,
+              tourLogs: t.tourLogs?.filter((log) => log.tourLogGuid !== deletedTourLog.tourLogGuid) ?? [],
+            };
+          }
+          return t;
+        }),
+      );
+    } catch (error) {
+      if (error instanceof HttpErrorResponse) {
+        this.error.set(error.error?.detail ?? error.message);
+      } else {
+        this.error.set('An unknown error occurred.');
+      }
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   updateTourLog(tourGuid: string, updatedLog: TourLog): void {
@@ -259,11 +308,11 @@ export class TourService {
         (log): TourLog => ({
           tourLogGuid: log.tourLogGuid,
           tourGuid: log.tourGuid,
-          dateTime: new Date(log.timestamp),
+          timestamp: new Date(log.timestamp),
           comment: log.comment,
           difficulty: log.difficulty,
-          totalDistance: log.totalDistanceInMeters,
-          totalTime: log.totalTimeMin,
+          totalDistanceInMeters: log.totalDistanceInMeters,
+          totalTimeMin: log.totalTimeMin,
           rating: log.rating,
         }),
       ),

@@ -21,7 +21,7 @@ public class TourLogController : ControllerBase, ITourLogController
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<TourDto>>> GetToursLogsOfTour(Guid tourGuid)
+    public async Task<ActionResult<List<TourLogDto>>> GetToursLogsOfTour(Guid tourGuid)
     {
         try
         {
@@ -36,7 +36,7 @@ public class TourLogController : ControllerBase, ITourLogController
     [HttpGet("{tourLogGuid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<TourDto>> GetTourLog(Guid tourLogGuid)
+    public async Task<ActionResult<TourLogDto>> GetTourLog(Guid tourLogGuid)
     {
         try
         {
@@ -51,7 +51,7 @@ public class TourLogController : ControllerBase, ITourLogController
     [HttpPost("{tourGuid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<GuidDto>> CreateTourLog(Guid tourGuid, TourLogCmd tourLog)
+    public async Task<ActionResult<TourLogDto>> CreateTourLog(Guid tourGuid, TourLogCmd tourLog)
     {
         try
         {
@@ -66,7 +66,7 @@ public class TourLogController : ControllerBase, ITourLogController
     [HttpPatch("{tourGuid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<GuidDto>> UpdateTourLog(Guid tourLogGuid, TourLogCmd tourLog)
+    public async Task<ActionResult<TourLogDto>> UpdateTourLog(Guid tourLogGuid, TourLogCmd tourLog)
     {
         try
         {
@@ -81,7 +81,7 @@ public class TourLogController : ControllerBase, ITourLogController
     [HttpDelete("{tourLogGuid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<GuidDto>> DeleteTourLog(Guid tourLogGuid)
+    public async Task<ActionResult<TourLogDto>> DeleteTourLog(Guid tourLogGuid)
     {
         try
         {

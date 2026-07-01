@@ -1,10 +1,10 @@
 ﻿export interface TourLog {
   tourLogGuid: string;
   tourGuid: string;
-  dateTime: Date;
+  timestamp: Date;
   comment: string;
   difficulty: number;
-  totalDistance: number;
-  totalTime: number;
+  totalDistanceInMeters: number;
+  totalTimeMin: number;
   rating: number;
 }

@@ -2,7 +2,6 @@
 using cts.core.svc.application.Abstractions.Persistence;
 using cts.core.svc.application.Abstractions.Time;
 using cts.core.svc.application.Interfaces;
-using cts.core.svc.application.Services;
 using cts.core.svc.infrastructure.Authentication;
 using cts.core.svc.infrastructure.Persistence;
 using cts.core.svc.infrastructure.Persistence.Repositories;
@@ -34,6 +33,7 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITransportRepository, TransportRepository>();
         services.AddScoped<ITourRepository, TourRepository>();
+        services.AddScoped<ITourLogRepository, TourLogRepository>();
 
         services.AddScoped<IUnitOfWork>(provider =>
             provider.GetRequiredService<TourPlannerDbContext>());

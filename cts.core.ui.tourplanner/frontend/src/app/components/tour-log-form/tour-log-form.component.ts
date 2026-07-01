@@ -46,11 +46,11 @@ export class TourLogFormComponent {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['existingLog'] && this.existingLog) {
       this.form.patchValue({
-        dateTime: new Date(this.existingLog.dateTime).toISOString().slice(0, 16),
+        dateTime: new Date(this.existingLog.timestamp).toISOString().slice(0, 16),
         comment: this.existingLog.comment || '',
         difficulty: this.existingLog.difficulty || 3,
-        totalDistance: this.existingLog.totalDistance ?? 0,
-        totalTime: this.existingLog.totalTime ?? 0,
+        totalDistance: this.existingLog.totalDistanceInMeters ?? 0,
+        totalTime: this.existingLog.totalTimeMin ?? 0,
         rating: this.existingLog.rating ?? 3,
       });
     }
@@ -68,11 +68,11 @@ export class TourLogFormComponent {
         const updatedLog: TourLog = {
           tourLogGuid: this.existingLog.tourLogGuid,
           tourGuid: this.existingLog.tourGuid,
-          dateTime: new Date(this.form.value.dateTime),
+          timestamp: new Date(this.form.value.dateTime),
           comment: this.form.value.comment,
           difficulty: this.form.value.difficulty,
-          totalDistance: parseFloat(this.form.value.totalDistance),
-          totalTime: parseInt(this.form.value.totalTime, 10),
+          totalDistanceInMeters: parseFloat(this.form.value.totalDistance),
+          totalTimeMin: parseInt(this.form.value.totalTime, 10),
           rating: this.form.value.rating,
         };
         this.logUpdated.emit(updatedLog);
@@ -80,11 +80,11 @@ export class TourLogFormComponent {
         const newTourLog: TourLog = {
           tourLogGuid: crypto.randomUUID(),
           tourGuid: this.tourGuid,
-          dateTime: new Date(this.form.value.dateTime),
+          timestamp: new Date(this.form.value.dateTime),
           comment: this.form.value.comment,
           difficulty: this.form.value.difficulty,
-          totalDistance: parseFloat(this.form.value.totalDistance),
-          totalTime: parseInt(this.form.value.totalTime, 10),
+          totalDistanceInMeters: parseFloat(this.form.value.totalDistance),
+          totalTimeMin: parseInt(this.form.value.totalTime, 10),
           rating: this.form.value.rating,
         };
         this.logSubmitted.emit(newTourLog);

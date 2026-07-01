@@ -9,7 +9,7 @@ namespace cts.core.svc.infrastructure.Persistence.Repositories;
 
 public class TourLogRepository(TourPlannerDbContext db) : ITourLogRepository
 {
-    public async Task<ActionResult<List<TourLogDto>>> GetToursLogsOfTour(Guid tourGuid)
+    public async Task<List<TourLogDto>> GetToursLogsOfTour(Guid tourGuid)
     {
         return await db.TourLogs
             .Where(tl => tl.Tour.TourGuid == tourGuid)
@@ -26,7 +26,7 @@ public class TourLogRepository(TourPlannerDbContext db) : ITourLogRepository
             .ToListAsync();
     }
 
-    public async Task<ActionResult<TourLogDto?>> GetTourLog(Guid tourLogGuid)
+    public async Task<TourLogDto?> GetTourLog(Guid tourLogGuid)
     {
         return await db.TourLogs
             .Where(tl => tl.TourLogGuid == tourLogGuid)
@@ -43,10 +43,10 @@ public class TourLogRepository(TourPlannerDbContext db) : ITourLogRepository
             .FirstOrDefaultAsync();
     }
 
-    public async Task<ActionResult<GuidDto>> CreateTourLog(Guid tourGuid, TourLogCmd tourLog)
+    public async Task<TourLogDto> CreateTourLog(Guid tourGuid, TourLogCmd tourLog)
     {
         var tour = await db.Tours.FirstOrDefaultAsync(t => t.TourGuid == tourGuid);
-        
+
         if (tour is null)
             throw new KeyNotFoundException($"Tour with Guid {tourGuid} not found.");
 
@@ -60,16 +60,27 @@ public class TourLogRepository(TourPlannerDbContext db) : ITourLogRepository
             tourLog.Rating
         );
 
-        var createdTourLog = db.TourLogs.Add(creatingTourLog);
+        var createdTourLog = db.TourLogs.Add(creatingTourLog).Entity;
         await db.SaveChangesAsync();
 
-        return new GuidDto(createdTourLog.Entity.TourLogGuid);
+        return new TourLogDto(
+            createdTourLog.TourLogGuid,
+            createdTourLog.Tour.TourGuid,
+            createdTourLog.Timestamp,
+            createdTourLog.Comment,
+            createdTourLog.Difficulty,
+            createdTourLog.TotalDistanceInMeters,
+            createdTourLog.TotalTimeMin,
+            createdTourLog.Rating
+        );
     }
 
-    public async Task<ActionResult<GuidDto>> UpdateTourLog(Guid tourLogGuid, TourLogCmd tourLog)
+    public async Task<TourLogDto> UpdateTourLog(Guid tourLogGuid, TourLogCmd tourLog)
     {
-        var updatingTourLog = await db.TourLogs.FirstOrDefaultAsync(tl => tl.TourLogGuid == tourLogGuid);
-        
+        var updatingTourLog = await db.TourLogs
+            .Include(t => t.Tour)
+            .FirstOrDefaultAsync(tl => tl.TourLogGuid == tourLogGuid);
+
         if (updatingTourLog is null)
             throw new KeyNotFoundException($"TourLog with Guid {tourLogGuid} not found.");
 
@@ -79,22 +90,42 @@ public class TourLogRepository(TourPlannerDbContext db) : ITourLogRepository
         updatingTourLog.TotalDistanceInMeters = tourLog.TotalDistanceInMeters;
         updatingTourLog.TotalTimeMin = tourLog.TotalTimeMin;
         updatingTourLog.Rating = tourLog.Rating;
-        
+
         await db.SaveChangesAsync();
 
-        return new GuidDto(updatingTourLog.TourLogGuid);
+        return new TourLogDto(
+            updatingTourLog.TourLogGuid,
+            updatingTourLog.Tour.TourGuid,
+            updatingTourLog.Timestamp,
+            updatingTourLog.Comment,
+            updatingTourLog.Difficulty,
+            updatingTourLog.TotalDistanceInMeters,
+            updatingTourLog.TotalTimeMin,
+            updatingTourLog.Rating
+        );
     }
 
-    public async Task<ActionResult<GuidDto>> DeleteTourLog(Guid tourLogGuid)
+    public async Task<TourLogDto> DeleteTourLog(Guid tourLogGuid)
     {
-        var tourLog = await db.TourLogs.FirstOrDefaultAsync(tl => tl.TourLogGuid == tourLogGuid);
-        
+        var tourLog = await db.TourLogs
+            .Include(t => t.Tour)
+            .FirstOrDefaultAsync(tl => tl.TourLogGuid == tourLogGuid);
+
         if (tourLog is null)
             throw new KeyNotFoundException($"TourLog with Guid {tourLogGuid} not found.");
 
-        var deletedTourLog = db.TourLogs.Remove(tourLog);
+        var deletedTourLog = db.TourLogs.Remove(tourLog).Entity;
         await db.SaveChangesAsync();
 
-        return new GuidDto(deletedTourLog.Entity.TourLogGuid);
+        return new TourLogDto(
+            deletedTourLog.TourLogGuid,
+            deletedTourLog.Tour.TourGuid,
+            deletedTourLog.Timestamp,
+            deletedTourLog.Comment,
+            deletedTourLog.Difficulty,
+            deletedTourLog.TotalDistanceInMeters,
+            deletedTourLog.TotalTimeMin,
+            deletedTourLog.Rating
+        );
     }
 }

@@ -264,7 +264,7 @@
               <div class="log-card">
                 <div class="log-header">
                   <div class="log-meta">
-                    <span class="log-date">{{ log.dateTime | date : 'short' }}</span>
+                    <span class="log-date">{{ log.timestamp | date : 'short' }}</span>
                     <span class="log-rating">{{ log.rating }}/5 ⭐</span>
                     <span class="log-difficulty">Difficulty: {{ log.difficulty }}/5</span>
                   </div>
@@ -286,11 +286,11 @@
                   <div class="log-stats">
                     <div class="stat">
                       <span class="stat-label">Distance:</span>
-                      <span class="stat-value">{{ log.totalDistance }} km</span>
+                      <span class="stat-value">{{ log.totalDistanceInMeters }} km</span>
                     </div>
                     <div class="stat">
                       <span class="stat-label">Time:</span>
-                      <span class="stat-value">{{ log.totalTime }} min</span>
+                      <span class="stat-value">{{ log.totalTimeMin }} min</span>
                     </div>
                   </div>
                 </div>
