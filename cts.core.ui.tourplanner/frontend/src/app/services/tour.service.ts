@@ -224,26 +224,54 @@ export class TourService {
     }
   }
 
-  updateTourLog(tourGuid: string, updatedLog: TourLog): void {
+  async updateTourLog(tourGuid: string, tourLog: TourLog): Promise<void> {
+    this.isLoading.set(true);
+    this.error.set(null);
+
     const currentUser = this.appState.currentUser();
     if (!currentUser) {
       throw new Error('Cannot update tour log: no authenticated user');
     }
 
-    this._tours.update((tours) =>
-      tours.map((t) => {
-        if (t.tourGuid === tourGuid && t.userGuid === currentUser.userGuid) {
-          return {
-            ...t,
-            tourLogs: (t.tourLogs ?? []).map((log) =>
-              log.tourLogGuid === updatedLog.tourLogGuid ? { ...log, ...updatedLog } : log,
-            ),
-          };
-        }
-        return t;
-      }),
-    );
-    this.persistToStorage();
+    try {
+      const response = await firstValueFrom(
+        this.http.patch<TourLog>(`/api/tourlog/${tourGuid}?tourLogGuid=${tourLog.tourLogGuid}`, {
+          tourGuid: tourGuid,
+          timestamp: tourLog.timestamp.toISOString(),
+          comment: tourLog.comment,
+          difficulty: tourLog.difficulty,
+          totalDistanceInMeters: tourLog.totalDistanceInMeters,
+          totalTimeMin: tourLog.totalTimeMin,
+          rating: tourLog.rating,
+        }),
+      );
+
+      const updatedTourLog: TourLog = {
+        ...response,
+      };
+
+      this._tours.update((tours) =>
+        tours.map((t) => {
+          if (t.tourGuid === tourGuid && t.userGuid === currentUser.userGuid) {
+            return {
+              ...t,
+              tourLogs: (t.tourLogs ?? []).map((log) =>
+                log.tourLogGuid === updatedTourLog.tourLogGuid ? { ...log, ...updatedTourLog } : log,
+              ),
+            };
+          }
+          return t;
+        }),
+      );
+    } catch (error) {
+      if (error instanceof HttpErrorResponse) {
+        this.error.set(error.error?.detail ?? error.message);
+      } else {
+        this.error.set('An unknown error occurred.');
+      }
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   async loadToursFromBackend(): Promise<boolean> {

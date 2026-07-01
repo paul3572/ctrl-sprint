@@ -29,7 +29,7 @@ public class OpenRouteServiceTests
     }
     
     [Test]
-    // [Explicit("Requires OpenRouteService API key")]
+    [Explicit("Requires OpenRouteService API key")]
     public async Task GeocodeAsync_ShouldReturnRealCoordinates_ForVienna()
     {
         var result = await service.GeocodeAsync("Vienna");
@@ -40,7 +40,7 @@ public class OpenRouteServiceTests
     }
     
     [Test]
-    // [Explicit("Requires OpenRouteService API key")]
+    [Explicit("Requires OpenRouteService API key")]
     public async Task GetRouteAsync_ShouldReturnRealRoute()
     {
         var result = await service.GetRouteAsync(

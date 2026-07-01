@@ -34,7 +34,7 @@ export class TourLogFormComponent {
 
   constructor() {
     this.form = this.fb.group({
-      dateTime: [new Date().toISOString().slice(0, 16), [Validators.required]],
+      dateTime: [this.existingLog?.timestamp ?? new Date().toISOString().slice(0, 16), [Validators.required]],
       comment: [''],
       difficulty: [3, [Validators.required, Validators.min(1), Validators.max(5)]],
       totalDistance: [0, [Validators.required, Validators.min(0)]],

@@ -268,14 +268,14 @@
                     <span class="log-rating">{{ log.rating }}/5 ⭐</span>
                     <span class="log-difficulty">Difficulty: {{ log.difficulty }}/5</span>
                   </div>
-                  <div class="log-actions">
-                    <button class="btn" (click)="onEditTourLog(log)">✏</button>
+                  <div class="tour-actions">
+                    <button class="btn btn-secondary" (click)="onEditTourLog(log)">✏ Edit</button>
                     <button
-                      class="btn-delete"
+                      class="btn btn-danger btn-delete"
                       (click)="onDeleteTourLog(log.tourLogGuid)"
                       aria-label="Delete tour log"
                     >
-                      🗑
+                      🗑 Delete
                     </button>
                   </div>
                 </div>

@@ -11,7 +11,9 @@
 
     <ItemGroup>
         <PackageReference Include="coverlet.collector" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="Moq" />
         <PackageReference Include="NUnit" />
         <PackageReference Include="NUnit.Analyzers" />
         <PackageReference Include="NUnit3TestAdapter" />
@@ -23,6 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\cts.core.svc.application\cts.core.svc.application.csproj" />
+      <ProjectReference Include="..\cts.core.svc.infrastructure\cts.core.svc.infrastructure.csproj" />
     </ItemGroup>
     
 </Project>
