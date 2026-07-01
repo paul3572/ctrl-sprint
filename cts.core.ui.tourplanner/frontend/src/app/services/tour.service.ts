@@ -6,7 +6,6 @@ import { AppStateService } from './app-state.service';
 import { firstValueFrom } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { TourDto } from '../contracts/TourDto';
-import {TourLogDto} from '../contracts/TourLogDto';
 
 @Injectable({ providedIn: 'root' })
 export class TourService {
@@ -18,7 +17,6 @@ export class TourService {
   // All tours (from all users) - exposed for future "browse all tours" feature
   readonly allTours = computed(() => this._tours());
 
-  // Computed: tours for current user only
   readonly userTours = computed(() => {
     const currentUser = this.appState.currentUser();
     if (!currentUser) return [];
@@ -208,7 +206,8 @@ export class TourService {
           if (t.tourGuid === tourGuid && t.userGuid === currentUser.userGuid) {
             return {
               ...t,
-              tourLogs: t.tourLogs?.filter((log) => log.tourLogGuid !== deletedTourLog.tourLogGuid) ?? [],
+              tourLogs:
+                t.tourLogs?.filter((log) => log.tourLogGuid !== deletedTourLog.tourLogGuid) ?? [],
             };
           }
           return t;
@@ -319,4 +318,3 @@ export class TourService {
     };
   }
 }
-

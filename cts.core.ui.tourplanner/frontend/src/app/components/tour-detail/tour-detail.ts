@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -48,6 +48,16 @@ export class TourDetail implements OnInit {
       to: [{ value: '', disabled: true }, [Validators.required]],
       transportType: [Transport.Car, [Validators.required]],
       rating: [0, [Validators.required, Validators.min(0), Validators.max(5)]],
+    });
+
+    effect(() => {
+      const current = this.tour();
+      if (!current) return;
+
+      const updated = this.tourService.getTourByGuid(current.tourGuid);
+      if (updated && updated !== current) {
+        this.tour.set(updated);
+      }
     });
   }
 
@@ -141,13 +151,13 @@ export class TourDetail implements OnInit {
     this.isSubmitting.set(true);
     try {
       if (type === 'tour') {
-        this.tourService.deleteTour(guid);
+        await this.tourService.deleteTour(guid);
         this.notifications.success('Tour deleted successfully!');
         await this.router.navigate(['/']);
       } else if (type === 'log') {
         const currentTour = this.tour();
         if (currentTour) {
-          this.tourService.deleteTourLog(currentTour.tourGuid, guid);
+          await this.tourService.deleteTourLog(currentTour.tourGuid, guid);
           const updatedTour = this.tourService.getTourByGuid(currentTour.tourGuid);
           if (updatedTour) {
             this.tour.set(updatedTour);
