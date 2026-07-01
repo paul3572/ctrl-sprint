@@ -5,5 +5,9 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\cts.core.svc.domain\cts.core.svc.domain.csproj" />
+    </ItemGroup>
     
 </Project>

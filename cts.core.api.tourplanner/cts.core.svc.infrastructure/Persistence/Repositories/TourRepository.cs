@@ -1,6 +1,7 @@
 ﻿using cts.core.svc.application.Interfaces;
 using cts.core.svc.contracts.Tours;
 using cts.core.svc.domain;
+using cts.core.svc.domain.OpenRoute;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TourLogDto = cts.core.svc.contracts.TourLogs.TourLogDto;
@@ -36,7 +37,8 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
                     tl.TotalDistanceInMeters,
                     tl.TotalTimeMin,
                     tl.Rating
-                    )).ToList()
+                    )).ToList(),
+                t.RouteGeometry
                 )).ToListAsync();
     }
 
@@ -49,7 +51,7 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
             .FirstOrDefaultAsync(t => t.TourGuid == tourGuid);
     }
 
-    public async Task<ActionResult<Tour>> CreateTour(Guid userGuid, TourCmd tour, double distanceInMeters, int estimatedTimeMin)
+    public async Task<ActionResult<Tour>> CreateTour(Guid userGuid, TourCmd tour, RouteResult routeResult)
     {
         var user = await db.Users.FirstOrDefaultAsync(u  => u.UserGuid == userGuid);
         
@@ -64,10 +66,13 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
             tour.To,
             await transportRepo.GetTransportTypeByName(tour.TransportName) ??
             await transportRepo.GetTransportTypeById(1) ?? new Transport("Car", "driving-car"),
-            distanceInMeters,
-            estimatedTimeMin,
+            routeResult.DistanceInMeters,
+            routeResult.EstimatedTimeMin,
             tour.Rating
-        );
+        )
+        {
+            RouteGeometry = routeResult.Geometry,
+        };
         
         var createdTour = db.Tours.Add(creatingTour);
         await db.SaveChangesAsync();

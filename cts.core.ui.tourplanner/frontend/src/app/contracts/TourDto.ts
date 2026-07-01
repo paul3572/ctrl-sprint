@@ -1,4 +1,5 @@
 ﻿import { TourLogDto } from './TourLogDto';
+import { RouteGeometry } from './RouteGeometry';
 
 export interface TourDto {
   tourGuid: string;
@@ -12,4 +13,5 @@ export interface TourDto {
   estimatedTimeMinutes: number;
   rating: number;
   tourLogs: TourLogDto[];
+  routeGeometry: RouteGeometry;
 }

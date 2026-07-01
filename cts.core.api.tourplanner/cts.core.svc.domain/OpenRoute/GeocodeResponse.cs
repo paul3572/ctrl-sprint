@@ -1,4 +1,4 @@
-﻿namespace cts.core.svc.application.Services.OpenRoute;
+﻿namespace cts.core.svc.domain.OpenRoute;
 
 public class GeocodeResponse
 {

@@ -50,6 +50,6 @@ public class OpenRouteServiceTests
 
         Assert.That(result.DistanceInMeters, Is.GreaterThan(10000));
         Assert.That(result.EstimatedTimeMin, Is.GreaterThan(60));
-        Assert.That(result.Geometry.Count, Is.GreaterThan(1));
+        Assert.That(result.Geometry.Coordinates.Count, Is.GreaterThan(1));
     }
 }

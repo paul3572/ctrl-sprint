@@ -1,5 +1,5 @@
 ﻿using cts.core.svc.application.Interfaces;
-using cts.core.svc.application.Services.OpenRoute;
+using cts.core.svc.domain.OpenRoute;
 
 namespace cts.core.svc.application.Services;
 
@@ -11,7 +11,7 @@ public class MockRouteService : IRouteService
             new RouteResult(
                 17.5,
                 28,
-                []
+                new RouteGeometry()
             ));
     }
 

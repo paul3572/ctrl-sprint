@@ -1,7 +1,6 @@
 ﻿using cts.core.svc.application.Interfaces;
 using cts.core.svc.contracts.TourLogs;
 using cts.core.svc.contracts.Tours;
-using Microsoft.AspNetCore.Mvc;
 
 namespace cts.core.svc.application.Services;
 
@@ -52,7 +51,8 @@ public class TourService : ITourService
                 log.TotalDistanceInMeters,
                 log.TotalTimeMin,
                 log.Rating
-            )).ToList()
+            )).ToList(),
+            tourDto.RouteGeometry
         );
     }
 
@@ -65,7 +65,7 @@ public class TourService : ITourService
         
         var routeResult = await this.routeService.GetRouteAsync(tour.From, tour.To, transport.OpenRouteProfile);
         
-        var createdTour = await this.tourRepository.CreateTour(userGuid, tour, routeResult.DistanceInMeters, routeResult.EstimatedTimeMin);
+        var createdTour = await this.tourRepository.CreateTour(userGuid, tour, routeResult);
 
         if (createdTour.Value is null)
             throw new KeyNotFoundException($"Tour could not be created for user with Guid {userGuid}.");
@@ -81,7 +81,8 @@ public class TourService : ITourService
             createdTour.Value.TourDistanceInMeters,
             createdTour.Value.EstimatedTimeMinutes,
             createdTour.Value.Rating,
-            []
+            [],
+            createdTour.Value.RouteGeometry
         );
     }
 
@@ -112,7 +113,8 @@ public class TourService : ITourService
                 log.TotalDistanceInMeters,
                 log.TotalTimeMin,
                 log.Rating
-            )).ToList()
+            )).ToList(),
+            updatedTour.Value.RouteGeometry
         );
     }
 
@@ -143,7 +145,8 @@ public class TourService : ITourService
                 log.TotalDistanceInMeters,
                 log.TotalTimeMin,
                 log.Rating
-            )).ToList()
+            )).ToList(),
+            deletedTour.Value.RouteGeometry
         );
     }
 }

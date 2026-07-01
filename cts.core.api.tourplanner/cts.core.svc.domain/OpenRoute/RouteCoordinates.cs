@@ -1,5 +1,9 @@
-﻿namespace cts.core.svc.application.Services.OpenRoute;
+﻿using System.Text.Json.Serialization;
+using cts.core.svc.domain.OpenRoute.Converter;
 
+namespace cts.core.svc.domain.OpenRoute;
+
+[JsonConverter(typeof(RouteCoordinatesJsonConverter))]
 public class RouteCoordinates
 {
     public RouteCoordinates(double longitude, double latitude)

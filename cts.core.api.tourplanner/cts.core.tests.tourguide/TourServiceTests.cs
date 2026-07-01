@@ -1,8 +1,8 @@
 ﻿using cts.core.svc.application.Interfaces;
 using cts.core.svc.application.Services;
-using cts.core.svc.application.Services.OpenRoute;
 using cts.core.svc.contracts.Tours;
 using cts.core.svc.domain;
+using cts.core.svc.domain.OpenRoute;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -50,7 +50,7 @@ public class TourServiceTests
         var route = new RouteResult(
             100.0,
             12500,
-            []
+            new RouteGeometry()
             );
 
         var user = User.Create(
@@ -84,8 +84,7 @@ public class TourServiceTests
             .Setup(x => x.CreateTour(
                 userGuid,
                 command,
-                route.DistanceInMeters,
-                route.EstimatedTimeMin))
+                route))
             .ReturnsAsync(new ActionResult<Tour>(createdTour));
 
         // Act
@@ -109,8 +108,7 @@ public class TourServiceTests
         tourRepository.Verify(x => x.CreateTour(
             userGuid,
             command,
-            route.DistanceInMeters,
-            route.EstimatedTimeMin), Times.Once);
+            route), Times.Once);
     }
 
     [Test]
@@ -158,7 +156,7 @@ public class TourServiceTests
         var route = new RouteResult(
             1000.0,
             5,
-            []);
+            new RouteGeometry());
 
         transportRepository
             .Setup(x => x.GetTransportTypeByName("Car"))
@@ -175,8 +173,7 @@ public class TourServiceTests
             .Setup(x => x.CreateTour(
                 userGuid,
                 command,
-                route.DistanceInMeters,
-                route.EstimatedTimeMin))
+                route))
             .ReturnsAsync(new ActionResult<Tour>((Tour?)null));
 
         // Act + Assert

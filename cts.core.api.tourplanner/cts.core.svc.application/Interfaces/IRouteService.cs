@@ -1,4 +1,4 @@
-﻿using cts.core.svc.application.Services.OpenRoute;
+﻿using cts.core.svc.domain.OpenRoute;
 
 namespace cts.core.svc.application.Interfaces;
 

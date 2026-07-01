@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net.Http.Json;
 using cts.core.svc.application.Interfaces;
-using cts.core.svc.application.Services.OpenRoute;
+using cts.core.svc.domain.OpenRoute;
 
 namespace cts.core.svc.application.Services;
 
@@ -51,7 +51,7 @@ public class OpenRouteService : IRouteService
         return new RouteResult(
             DistanceInMeters: routeFeature.Properties.Summary.Distance,
             EstimatedTimeMin: (int)Math.Round(routeFeature.Properties.Summary.Duration / 60.0),
-            Geometry: routeFeature.RouteGeometry.Coordinates);
+            Geometry: routeFeature.RouteGeometry);
     }
 
     public async Task<GeocodeResult> GeocodeAsync(string city, CancellationToken cancellationToken = default)

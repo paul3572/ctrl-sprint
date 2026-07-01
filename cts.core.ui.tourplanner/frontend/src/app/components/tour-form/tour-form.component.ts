@@ -63,6 +63,9 @@ export class TourFormComponent {
         estimatedTimeMinutes: 0,
         rating: this.form.value.rating,
         tourLogs: [],
+        routeGeometry: {
+          coordinates: [],
+        },
       };
       this.tourSubmitted.emit(newTour);
       this.form.reset();

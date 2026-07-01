@@ -233,7 +233,7 @@
       <section class="map-section">
         <h2>Route Map</h2>
         <div class="map-placeholder">
-          <app-mapview></app-mapview>
+          <app-mapview [routeGeometry]="tour()?.routeGeometry"></app-mapview>
         </div>
       </section>
 

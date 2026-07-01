@@ -343,6 +343,7 @@ export class TourService {
           rating: log.rating,
         }),
       ),
+      routeGeometry: dto.routeGeometry,
     };
   }
 }

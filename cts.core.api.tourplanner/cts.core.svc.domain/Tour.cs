@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using cts.core.svc.domain.OpenRoute;
 
 namespace cts.core.svc.domain;
 
@@ -49,4 +50,6 @@ public class Tour
 
     private List<TourLog> tourLogs = [];
     public virtual IReadOnlyList<TourLog> TourLogs => tourLogs;
+
+    public RouteGeometry RouteGeometry { get; set; } = new();
 }

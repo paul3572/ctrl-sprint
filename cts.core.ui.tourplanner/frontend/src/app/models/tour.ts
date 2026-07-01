@@ -1,5 +1,6 @@
 ﻿import { Transport } from './transport';
 import { TourLog } from './tourLog';
+import { RouteGeometry } from '../contracts/RouteGeometry';
 
 export interface Tour {
   tourGuid: string;
@@ -13,4 +14,5 @@ export interface Tour {
   estimatedTimeMinutes: number;
   rating: number;
   tourLogs: TourLog[];
+  routeGeometry: RouteGeometry;
 }

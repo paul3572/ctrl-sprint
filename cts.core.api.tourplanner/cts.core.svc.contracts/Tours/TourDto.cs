@@ -1,4 +1,5 @@
 ﻿using cts.core.svc.contracts.TourLogs;
+using cts.core.svc.domain.OpenRoute;
 
 namespace cts.core.svc.contracts.Tours;
 
@@ -13,5 +14,6 @@ public record TourDto(
     double TourDistanceInMeters,
     int EstimatedTimeMinutes,
     int Rating,
-    List<TourLogDto> TourLogs
+    List<TourLogDto> TourLogs,
+    RouteGeometry? RouteGeometry
 );

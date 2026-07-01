@@ -69,7 +69,7 @@ public sealed class AuthController : ControllerBase
 
             return Problem(detail: exception.Message);
         }
-        catch (PasswordPolicyViolationException exception)
+        catch (PasswordPolicyViolationException)
         {
             return this.Problem(detail: "Password needs to be at least 8 characters long.");
         }

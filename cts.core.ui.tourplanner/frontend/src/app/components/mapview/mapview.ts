@@ -1,5 +1,14 @@
-﻿import { AfterViewInit, Component, ElementRef, inject, viewChild } from '@angular/core';
+﻿import {
+  AfterViewInit,
+  Component,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  viewChild,
+} from '@angular/core';
 import { MapFacadeService } from '../../services/map-facade.service';
+import { RouteGeometry } from '../../contracts/RouteGeometry';
 
 @Component({
   selector: 'app-mapview',
@@ -9,10 +18,27 @@ import { MapFacadeService } from '../../services/map-facade.service';
 })
 export class Mapview implements AfterViewInit {
   private readonly mapFacade = inject(MapFacadeService);
+  readonly routeGeometry = input<RouteGeometry | undefined>(undefined);
 
   protected readonly mapHost = viewChild.required<ElementRef<HTMLDivElement>>('mapHost');
 
+  private mapInitialized = false;
+
+  private readonly routeEffect = effect(() => {
+    const route = this.routeGeometry();
+
+    if (route && this.mapInitialized) {
+      this.mapFacade.setRoute(route);
+    }
+  });
+
   ngAfterViewInit(): void {
     this.mapFacade.initMap(this.mapHost().nativeElement);
+    this.mapInitialized = true;
+
+    const route = this.routeGeometry();
+    if (route) {
+      this.mapFacade.setRoute(route);
+    }
   }
 }
