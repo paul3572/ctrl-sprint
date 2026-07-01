@@ -241,4 +241,35 @@ export class TourDetail implements OnInit {
 
     return 'Invalid input';
   }
+
+  getPopularity(): string {
+    const count = this.tour()?.tourLogs?.length ?? 0;
+
+    if (count === 0) return 'Not popular 🥴';
+    if (count < 5) return 'Low 📉';
+    if (count < 15) return 'Medium ✨';
+    return 'High 🔥';
+  }
+
+  getChildFriendliness(): number {
+    const logs = this.tour()?.tourLogs ?? [];
+
+    if (logs.length === 0) return 0;
+
+    const avgDifficulty = logs.reduce((s, l) => s + l.difficulty, 0) / logs.length;
+
+    const avgTime = logs.reduce((s, l) => s + l.totalTime, 0) / logs.length;
+
+    const avgDistance = logs.reduce((s, l) => s + l.totalDistance, 0) / logs.length;
+
+    let stars = 5;
+
+    if (avgDifficulty > 4) stars--;
+    if (avgDifficulty > 3) stars--;
+
+    if (avgTime > 120) stars--;
+    if (avgDistance > 10000) stars--;
+
+    return Math.max(1, stars);
+  }
 }

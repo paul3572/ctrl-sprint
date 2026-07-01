@@ -208,6 +208,24 @@
                 }
               }
             </div>
+
+            <div class="info-item">
+              @if (!isEditing()) {
+                <label>Popularity</label>
+                <div class="info-value">
+                  {{ getPopularity() }}
+                </div>
+              }
+            </div>
+
+            <div class="info-item">
+              @if (!isEditing()) {
+                <label>Child-Friendliness</label>
+                <div class="info-value">
+                  {{ getChildFriendliness() }} /5⭐
+                </div>
+              }
+            </div>
           </div>
         </section>
       </div>
