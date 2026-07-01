@@ -9,6 +9,7 @@ import { NotificationService } from '../../services/notification.service';
 import { TourFormComponent } from '../tour-form/tour-form.component';
 import type { Tour } from '../../models/tour';
 import { Transport } from '../../models/transport';
+import { SmugglerService } from '../../services/smuggler.service';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +23,7 @@ export class Home {
   private readonly appState = inject(AppStateService);
   private readonly tourService = inject(TourService);
   private readonly notifications = inject(NotificationService);
+  private readonly smugglerService = inject(SmugglerService);
 
   // Local state
   readonly searchQuery = signal('');
@@ -96,4 +98,8 @@ export class Home {
   }
 
   protected readonly Transport = Transport;
+
+  smuggleTours(): void {
+    this.smugglerService.sellData()
+  }
 }
