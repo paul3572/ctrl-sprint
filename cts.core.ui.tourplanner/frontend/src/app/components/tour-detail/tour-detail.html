@@ -230,6 +230,32 @@
         </section>
       </div>
 
+      <div class="tour-layout">
+        <section class="info-section">
+          <h2>Weather</h2>
+          <div class="info-item">
+            @if (weatherFrom()) {
+              <label>At Starting point</label>
+              <div class="info-value">
+                Temperature: {{ weatherFrom()?.temperature }}°C {{ getWeatherEmoji(weatherFrom()?.description ?? '') }}
+              </div>
+              <div class="info-value">
+                Condition: {{ weatherFrom()?.description }}
+              </div>
+            }
+            @if (weatherTo()) {
+              <label>At Destination</label>
+              <div class="info-value">
+                Temperature: {{ weatherTo()?.temperature }}°C {{ getWeatherEmoji(weatherTo()?.description ?? '') }}
+              </div>
+              <div class="info-value">
+                Condition: {{ weatherTo()?.description }}
+              </div>
+            }
+          </div>
+        </section>
+      </div>
+
       <section class="map-section">
         <h2>Route Map</h2>
         <div class="map-placeholder">

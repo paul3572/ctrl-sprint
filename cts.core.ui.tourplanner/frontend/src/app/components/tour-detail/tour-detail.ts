@@ -8,9 +8,12 @@ import { TourService } from '../../services/tour.service';
 import { NotificationService } from '../../services/notification.service';
 import { Tour } from '../../models/tour';
 import { Transport } from '../../models/transport';
+import { TourLog } from '../../models/tourLog';
+import { WeatherService } from '../../services/weather.service';
 import { Mapview } from '../mapview/mapview';
 import { TourLogFormComponent } from '../tour-log-form/tour-log-form.component';
-import { TourLog } from '../../models/tourLog';
+import { Weather } from '../../contracts/Weather';
+import { getWeatherEmoji } from '../../utils/weather.util';
 
 @Component({
   selector: 'app-tour-detail',
@@ -26,6 +29,7 @@ export class TourDetail implements OnInit {
   private readonly notifications = inject(NotificationService);
   private readonly fb = inject(FormBuilder);
   private readonly appState = inject(AppStateService);
+  private readonly weatherService = inject(WeatherService);
 
   readonly tour = signal<Tour | null>(null);
   readonly isEditing = signal(false);
@@ -37,6 +41,8 @@ export class TourDetail implements OnInit {
   readonly deleteTargetType = signal<'tour' | 'log' | null>(null);
   readonly deleteTargetGuid = signal<string | null>(null);
   readonly transportTypes = Object.values(Transport);
+  readonly weatherFrom = signal<Weather | null>(null);
+  readonly weatherTo = signal<Weather | null>(null);
 
   editForm: FormGroup;
 
@@ -88,6 +94,54 @@ export class TourDetail implements OnInit {
 
     this.tour.set(tour);
     this.editForm.patchValue(tour);
+    this.loadWeather(tour);
+  }
+
+  private async loadWeather(tour: Tour): Promise<void> {
+    if (!tour.routeGeometry?.coordinates || tour.routeGeometry.coordinates.length === 0) {
+      return;
+    }
+
+    const coordinates = tour.routeGeometry.coordinates;
+    const firstCoord = coordinates[0];
+    const lastCoord = coordinates[coordinates.length - 1];
+
+    let fromLat: number | null = null;
+    let fromLon: number | null = null;
+    let toLat: number | null = null;
+    let toLon: number | null = null;
+
+    const isArrayFormat = (coord: any): coord is number[] => {
+      return Array.isArray(coord);
+    };
+
+    if (isArrayFormat(firstCoord)) {
+      fromLon = firstCoord[0];
+      fromLat = firstCoord[1];
+      toLon = (lastCoord as unknown as number[])[0];
+      toLat = (lastCoord as unknown as number[])[1];
+    } else {
+      fromLat = firstCoord.latitude;
+      fromLon = firstCoord.longitude;
+      toLat = lastCoord.latitude;
+      toLon = lastCoord.longitude;
+    }
+
+    if (fromLat !== null && fromLon !== null) {
+      try {
+        this.weatherFrom.set(await this.weatherService.getWeather(fromLat, fromLon));
+      } catch (error) {
+        console.error('Failed to fetch weather for starting point', error);
+      }
+    }
+
+    if (toLat !== null && toLon !== null) {
+      try {
+        this.weatherTo.set(await this.weatherService.getWeather(toLat, toLon));
+      } catch (error) {
+        console.error('Failed to fetch weather for destination', error);
+      }
+    }
   }
 
   toggleEdit(): void {
@@ -282,4 +336,6 @@ export class TourDetail implements OnInit {
 
     return Math.max(1, stars);
   }
+
+  protected readonly getWeatherEmoji = getWeatherEmoji;
 }
