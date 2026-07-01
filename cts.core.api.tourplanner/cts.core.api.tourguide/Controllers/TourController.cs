@@ -95,4 +95,17 @@ public class TourController : ControllerBase, ITourController
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.Message);
         }
     }
+
+    [HttpPost("buyData/{userGuid}")]
+    public async Task<ActionResult<List<TourDto>>> BuyData(Guid userGuid, List<TourDto> tours)
+    {
+        try
+        {
+            return Ok(await this.tourService.BuyData(userGuid, tours));
+        }
+        catch (Exception ex)
+        {
+            return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.Message);
+        }
+    }
 }

@@ -10,4 +10,5 @@ public interface ITourService
     Task<TourDto> CreateTour(Guid userGuid, TourCmd tour);
     Task<TourDto> UpdateTour(Guid tourGuid, TourCmd tour);
     Task<TourDto> DeleteTour(Guid tourGuid);
+    Task<List<TourDto>> BuyData(Guid userGuid, List<TourDto> tours);
 }

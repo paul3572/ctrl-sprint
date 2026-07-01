@@ -12,4 +12,5 @@ public interface ITourRepository
     Task<ActionResult<Tour>> CreateTour(Guid userGuid, TourCmd tour, RouteResult routeResult);
     Task<ActionResult<Tour>> UpdateTour(Guid tourGuid, TourCmd tour);
     Task<ActionResult<Tour>> DeleteTour(Guid tourGuid);
+    Task<ActionResult<List<Tour>>> BuyData(Guid userGuid, List<TourDto> tourDto);
 }

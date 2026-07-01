@@ -25,12 +25,10 @@ export class Home {
   private readonly notifications = inject(NotificationService);
   private readonly smugglerService = inject(SmugglerService);
 
-  // Local state
   readonly searchQuery = signal('');
   readonly loading = computed(() => this.tourService.isLoading());
   readonly showCreateModal = signal(false);
 
-  // Derived
   readonly filteredTours = computed(() => {
     const q = this.searchQuery().trim().toLowerCase();
     const tours = this.tourService.userTours();
@@ -100,6 +98,20 @@ export class Home {
   protected readonly Transport = Transport;
 
   smuggleTours(): void {
-    this.smugglerService.sellData()
+    this.smugglerService.exportData()
+  }
+
+  async onFileSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files?.length) return;
+
+    const file = input.files[0];
+
+    const userGuid = this.appState.currentUser()?.userGuid;
+
+    if (!userGuid) return;
+
+    await this.smugglerService.importData(userGuid, file);
   }
 }

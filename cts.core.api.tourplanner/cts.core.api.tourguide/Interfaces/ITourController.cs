@@ -11,4 +11,5 @@ public interface ITourController
     Task<ActionResult<TourDto>> CreateTour(Guid userGuid, TourCmd tour);
     Task<ActionResult<TourDto>> UpdateTour(Guid tourGuid, TourCmd tour);
     Task<ActionResult<TourDto>> DeleteTour(Guid tourGuid);
+    Task<ActionResult<List<TourDto>>> BuyData(Guid userGuid, List<TourDto> tours);
 }

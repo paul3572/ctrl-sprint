@@ -117,4 +117,45 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
         await db.SaveChangesAsync();
         return deletedTour.Entity;
     }
+
+    public async Task<ActionResult<List<Tour>>> BuyData(Guid userGuid, List<TourDto> tourDtos)
+    {
+        var user = await db.Users
+            .FirstOrDefaultAsync(u => u.UserGuid == userGuid);
+
+        if (user is null)
+            throw new KeyNotFoundException($"User with Guid {userGuid} not found.");
+
+        var result = new List<Tour>();
+        
+        foreach (var dto in tourDtos)
+        {
+            var transport =
+                await transportRepo.GetTransportTypeByName(dto.TransportName)
+                ?? await transportRepo.GetTransportTypeById(1)
+                ?? new Transport("Car", "driving-car");
+
+            var tour = new Tour(
+                user,
+                dto.Name,
+                dto.Description,
+                dto.From,
+                dto.To,
+                transport,
+                dto.TourDistanceInMeters,
+                dto.EstimatedTimeMinutes,
+                dto.Rating
+            )
+            {
+                RouteGeometry = dto.RouteGeometry ?? new RouteGeometry()
+            };
+
+            db.Tours.Add(tour);
+            result.Add(tour);
+        }
+
+        await db.SaveChangesAsync();
+
+        return result;
+    }
 }

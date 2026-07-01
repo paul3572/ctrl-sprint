@@ -149,4 +149,37 @@ public class TourService : ITourService
             deletedTour.Value.RouteGeometry
         );
     }
+
+    public async Task<List<TourDto>> BuyData(Guid userGuid, List<TourDto> tours)
+    {
+        var newTours = await this.tourRepository.BuyData(userGuid, tours);
+
+        if (newTours.Value is null)
+            throw new KeyNotFoundException("Couldn't import tours.");
+
+        return newTours.Value
+            .Select(t => new TourDto(
+                t.TourGuid,
+                t.User.UserGuid,
+                t.Name,
+                t.Description,
+                t.From,
+                t.To,
+                t.Transport.Name,
+                t.TourDistanceInMeters,
+                t.EstimatedTimeMinutes,
+                t.Rating,
+                t.TourLogs.Select(tl => new TourLogDto(
+                    tl.TourLogGuid,
+                    tl.Tour.TourGuid,
+                    tl.Timestamp,
+                    tl.Comment,
+                    tl.Difficulty,
+                    tl.TotalDistanceInMeters,
+                    tl.TotalTimeMin,
+                    tl.Rating
+                )).ToList(),
+                t.RouteGeometry
+            )).ToList();
+    }
 }

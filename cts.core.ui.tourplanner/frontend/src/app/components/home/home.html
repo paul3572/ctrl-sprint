@@ -43,6 +43,17 @@
       <button class="btn btn-primary" (click)="smuggleTours()" type="button">
         Smuggle Tours
       </button>
+      <button class="btn btn-primary" (click)="fileInput.click()">
+        Import Tours
+      </button>
+
+      <input
+        #fileInput
+        type="file"
+        accept="application/json"
+        (change)="onFileSelected($event)"
+        hidden
+      />
     </section>
 
     <!-- Tours list -->
