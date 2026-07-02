@@ -2,6 +2,7 @@
 using cts.core.svc.contracts;
 using cts.core.svc.contracts.TourLogs;
 using cts.core.svc.domain;
+using cts.core.svc.domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,7 +49,7 @@ public class TourLogRepository(TourPlannerDbContext db) : ITourLogRepository
         var tour = await db.Tours.FirstOrDefaultAsync(t => t.TourGuid == tourGuid);
 
         if (tour is null)
-            throw new KeyNotFoundException($"Tour with Guid {tourGuid} not found.");
+            throw new TourNotFoundException($"Tour with Guid {tourGuid} not found.");
 
         var creatingTourLog = new TourLog(
             tour,
@@ -82,7 +83,7 @@ public class TourLogRepository(TourPlannerDbContext db) : ITourLogRepository
             .FirstOrDefaultAsync(tl => tl.TourLogGuid == tourLogGuid);
 
         if (updatingTourLog is null)
-            throw new KeyNotFoundException($"TourLog with Guid {tourLogGuid} not found.");
+            throw new TourLogNotFoundException($"TourLog with Guid {tourLogGuid} not found.");
 
         updatingTourLog.Timestamp = tourLog.Timestamp;
         updatingTourLog.Comment = tourLog.Comment;
@@ -112,7 +113,7 @@ public class TourLogRepository(TourPlannerDbContext db) : ITourLogRepository
             .FirstOrDefaultAsync(tl => tl.TourLogGuid == tourLogGuid);
 
         if (tourLog is null)
-            throw new KeyNotFoundException($"TourLog with Guid {tourLogGuid} not found.");
+            throw new TourLogNotFoundException($"TourLog with Guid {tourLogGuid} not found.");
 
         var deletedTourLog = db.TourLogs.Remove(tourLog).Entity;
         await db.SaveChangesAsync();

@@ -2,6 +2,7 @@
 using cts.core.svc.contracts;
 using cts.core.svc.contracts.TourLogs;
 using cts.core.svc.contracts.Tours;
+using cts.core.svc.domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using TourGuideApplication.Interfaces;
 
@@ -50,6 +51,7 @@ public class TourLogController : ControllerBase, ITourLogController
 
     [HttpPost("{tourGuid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TourLogDto>> CreateTourLog(Guid tourGuid, TourLogCmd tourLog)
     {
@@ -57,14 +59,19 @@ public class TourLogController : ControllerBase, ITourLogController
         {
             return Ok(await this.tourLogService.CreateTourLog(tourGuid, tourLog));
         }
-        catch  (Exception ex)
+        catch (TourNotFoundException ex)
         {
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.InnerException?.Message ?? ex.Message);
+        }
+        catch  (Exception ex)
+        {
+            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.InnerException?.Message ?? ex.Message);
         }
     }
 
     [HttpPatch("{tourGuid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TourLogDto>> UpdateTourLog(Guid tourLogGuid, TourLogCmd tourLog)
     {
@@ -72,14 +79,19 @@ public class TourLogController : ControllerBase, ITourLogController
         {
             return Ok(await this.tourLogService.UpdateTourLog(tourLogGuid, tourLog));
         }
-        catch  (Exception ex)
+        catch (TourLogNotFoundException ex)
         {
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.InnerException?.Message ?? ex.Message);
+        }
+        catch  (Exception ex)
+        {
+            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.InnerException?.Message ?? ex.Message);
         }
     }
 
     [HttpDelete("{tourLogGuid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TourLogDto>> DeleteTourLog(Guid tourLogGuid)
     {
@@ -87,9 +99,13 @@ public class TourLogController : ControllerBase, ITourLogController
         {
             return Ok(await this.tourLogService.DeleteTourLog(tourLogGuid));
         }
-        catch  (Exception ex)
+        catch (TourLogNotFoundException ex)
         {
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.InnerException?.Message ?? ex.Message);
+        }
+        catch  (Exception ex)
+        {
+            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.InnerException?.Message ?? ex.Message);
         }
     }
 }
