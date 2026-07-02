@@ -11,10 +11,12 @@ namespace TourGuideApplication.Controllers;
 public class WeatherController : ControllerBase, IWeatherController
 {
     private readonly IWeatherService _weatherService;
+    private readonly ILogger<WeatherController> _logger;
 
-    public WeatherController(IWeatherService weatherService)
+    public WeatherController(IWeatherService weatherService, ILogger<WeatherController> logger)
     {
-        _weatherService = weatherService;
+        this._weatherService = weatherService;
+        this._logger = logger;
     }
 
     [HttpGet]
@@ -26,6 +28,8 @@ public class WeatherController : ControllerBase, IWeatherController
         }
         catch (WeatherNotFoundException ex)
         {
+            this._logger.LogWarning(ex, "Weather not found.");
+            
             return new WeatherDto(27, string.Empty);
         }
     }

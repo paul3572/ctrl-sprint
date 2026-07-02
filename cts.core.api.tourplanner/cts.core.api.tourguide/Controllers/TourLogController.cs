@@ -13,10 +13,12 @@ namespace TourGuideApplication.Controllers;
 public class TourLogController : ControllerBase, ITourLogController
 {
     private readonly ITourLogService tourLogService;
+    private readonly ILogger<TourLogController> logger;
 
-    public TourLogController(ITourLogService tourLogService)
+    public TourLogController(ITourLogService tourLogService, ILogger<TourLogController> logger)
     {
         this.tourLogService = tourLogService;
+        this.logger = logger;
     }
 
     [HttpGet]
@@ -30,6 +32,8 @@ public class TourLogController : ControllerBase, ITourLogController
         }
         catch (Exception ex)
         {
+            this.logger.LogError(ex, "Unexpected error while getting a tourLog.");
+            
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.InnerException?.Message ?? ex.Message);
         }
     }
@@ -45,6 +49,8 @@ public class TourLogController : ControllerBase, ITourLogController
         }
         catch (Exception ex)
         {
+            this.logger.LogError(ex, "Unexpected error while getting a tourLog.");
+
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.InnerException?.Message ?? ex.Message);
         }
     }
@@ -61,10 +67,14 @@ public class TourLogController : ControllerBase, ITourLogController
         }
         catch (TourNotFoundException ex)
         {
+            this.logger.LogWarning(ex, "Tour {tourGuid} not found.", tourGuid);
+
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.InnerException?.Message ?? ex.Message);
         }
         catch  (Exception ex)
         {
+            this.logger.LogError(ex, "Unexpected error while creating a tourLog.");
+
             return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.InnerException?.Message ?? ex.Message);
         }
     }
@@ -81,10 +91,14 @@ public class TourLogController : ControllerBase, ITourLogController
         }
         catch (TourLogNotFoundException ex)
         {
+            this.logger.LogWarning(ex, "TourLog {tourLogGuid} not found while updating a tour.", tourLogGuid);
+            
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.InnerException?.Message ?? ex.Message);
         }
         catch  (Exception ex)
         {
+            this.logger.LogError(ex, "Unexpected error while updating a tourLog.");
+
             return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.InnerException?.Message ?? ex.Message);
         }
     }
@@ -101,10 +115,14 @@ public class TourLogController : ControllerBase, ITourLogController
         }
         catch (TourLogNotFoundException ex)
         {
+            this.logger.LogWarning(ex, "TourLog {tourLogGuid} not found while deleting a tour.", tourLogGuid);
+            
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.InnerException?.Message ?? ex.Message);
         }
         catch  (Exception ex)
         {
+            this.logger.LogError(ex, "Unexpected error while deleting a tourLog.");
+
             return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.InnerException?.Message ?? ex.Message);
         }
     }

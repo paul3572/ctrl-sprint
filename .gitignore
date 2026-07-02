@@ -88,3 +88,5 @@ desktop.ini
 # Environment examples allowed
 !.env.example
 !.env.template
+
+/cts.core.api.tourplanner/cts.core.api.tourguide/logs

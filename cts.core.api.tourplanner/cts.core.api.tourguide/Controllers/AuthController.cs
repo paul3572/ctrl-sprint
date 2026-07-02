@@ -17,13 +17,16 @@ public sealed class AuthController : ControllerBase
 {
     private readonly RegisterAuthService _registerAuthService;
     private readonly LoginAuthService _loginAuthService;
+    private readonly ILogger<AuthController> _logger;
 
     public AuthController(
         RegisterAuthService registerAuthService,
-        LoginAuthService loginAuthService)
+        LoginAuthService loginAuthService,
+        ILogger<AuthController> logger)
     {
         _registerAuthService = registerAuthService;
         _loginAuthService = loginAuthService;
+        _logger = logger;
     }
 
     [AllowAnonymous]
@@ -32,6 +35,8 @@ public sealed class AuthController : ControllerBase
         RegisterUserRequest request,
         CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Registration attempt for {Email}", request.Email);
+        
         try
         {
             AuthenticationResult result = await _registerAuthService.HandleAsync(
@@ -40,12 +45,20 @@ public sealed class AuthController : ControllerBase
                     request.Password),
                 cancellationToken);
             
-            this.SetAuthCookie(result);
-
+            SetAuthCookie(result);
+            
+            _logger.LogInformation(
+                "User {Email} registered successfully. UserGuid={UserGuid}",
+                result.Email,
+                result.UserGuid);
             return Ok(ToResponse(result));
         }
         catch (DbUpdateException exception)
         {
+            _logger.LogError(exception,
+                "Database error while registering user {Email}",
+                request.Email);
+            
             if (exception.InnerException is PostgresException pg)
             {
                 return pg.SqlState switch
@@ -71,7 +84,11 @@ public sealed class AuthController : ControllerBase
         }
         catch (PasswordPolicyViolationException)
         {
-            return this.Problem(detail: "Password needs to be at least 8 characters long.");
+            _logger.LogWarning(
+                "Password policy violation during registration for {Email}",
+                request.Email);
+            
+            return Problem(detail: "Password needs to be at least 8 characters long.");
         }
     }
 
@@ -81,6 +98,8 @@ public sealed class AuthController : ControllerBase
         LoginUserRequest request,
         CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Login attempt for {Email}", request.Email);
+        
         try
         {
             AuthenticationResult result = await _loginAuthService.HandleAsync(
@@ -91,10 +110,15 @@ public sealed class AuthController : ControllerBase
             
             this.SetAuthCookie(result);
 
+            _logger.LogInformation("User {Email} logged in successfully", result.Email);
             return Ok(ToResponse(result));
         }
         catch (InvalidCredentialsException exception)
         {
+            _logger.LogWarning(
+                "Failed login attempt for {Email}",
+                request.Email);
+            
             return Unauthorized(new ProblemDetails
             {
                 Status = StatusCodes.Status401Unauthorized,
@@ -108,6 +132,8 @@ public sealed class AuthController : ControllerBase
     [HttpGet("me")]
     public ActionResult<AuthResponse> GetMe()
     {
+        _logger.LogInformation("Authorization attempt.");
+        
         var userGuidClaim =
             User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
@@ -117,6 +143,8 @@ public sealed class AuthController : ControllerBase
         if (userGuidClaim is null || emailClaim is null)
             return Unauthorized();
 
+        _logger.LogInformation("User {Email} logged in successfully.", emailClaim);
+        
         return Ok(new AuthResponse
         {
             UserGuid = Guid.Parse(userGuidClaim),

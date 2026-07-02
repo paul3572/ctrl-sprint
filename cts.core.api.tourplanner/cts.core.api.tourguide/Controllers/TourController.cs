@@ -12,10 +12,12 @@ namespace TourGuideApplication.Controllers;
 public class TourController : ControllerBase, ITourController
 {
     private readonly ITourService tourService;
+    private readonly ILogger<TourController> logger;
 
-    public TourController(ITourService tourService)
+    public TourController(ITourService tourService, ILogger<TourController> logger)
     {
         this.tourService = tourService;
+        this.logger = logger;
     }
     
     [HttpGet]
@@ -29,6 +31,8 @@ public class TourController : ControllerBase, ITourController
         }
         catch (Exception ex)
         {
+            this.logger.LogError(ex, "Unexpected error while creating a tour.");
+
             return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.Message);
         }
     }
@@ -45,10 +49,14 @@ public class TourController : ControllerBase, ITourController
         }
         catch (TourException ex)
         {
+            this.logger.LogWarning(ex, "Something went wrong while retrieving Tour {TourGuid}.", tourGuid);
+            
             return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.Message);
         }
-        catch  (Exception ex)
+        catch (Exception ex)
         {
+            this.logger.LogWarning(ex, "Validation failed while creating a tour.");
+            
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.Message);
         }
     }
@@ -65,22 +73,32 @@ public class TourController : ControllerBase, ITourController
         }
         catch (UserNotFoundException ex)
         {
+            this.logger.LogWarning(ex, "User {UserGuid} not found while creating a tour.", userGuid);
+            
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.Message);
         }
         catch (TransportException ex)
         {
+            this.logger.LogWarning(ex, "Transport type could not be resolved.");
+            
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.Message);
         }
         catch (TourException ex)
         {
+            this.logger.LogWarning(ex, "Validation failed while creating a tour.");
+            
             return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.Message);
         }
-        catch (ValidationException e)
+        catch (ValidationException ex)
         {
-            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: e.InnerException?.Message ?? e.Message);
+            this.logger.LogWarning(ex, "Validation failed while creating a tour.");
+            
+            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.InnerException?.Message ?? ex.Message);
         }
         catch  (Exception ex)
         {
+            this.logger.LogError(ex, "Unexpected error while creating a tour.");
+            
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.Message);
         }
     }
@@ -97,14 +115,20 @@ public class TourController : ControllerBase, ITourController
         }
         catch (TourNotFoundException ex)
         {
+            this.logger.LogWarning(ex, "Tour {tourGuid} not found.", tourGuid);
+            
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.Message);
         }
         catch (TourException ex)
         {
+            this.logger.LogWarning(ex, "Validation failed while updating a tour.");
+            
             return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.Message);
         }
-        catch  (Exception ex)
+        catch (Exception ex)
         {
+            this.logger.LogWarning(ex, "Validation failed while updating a tour.");
+            
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.Message);
         }
     }
@@ -121,10 +145,14 @@ public class TourController : ControllerBase, ITourController
         }
         catch (TourNotFoundException ex)
         {
+            this.logger.LogWarning(ex, "Tour {UserGuid} not found while deleting a tour.", tourGuid);
+
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.Message);
         }
         catch (TourException ex)
         {
+            this.logger.LogWarning(ex, "Validation failed while deleting a tour.");
+            
             return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.Message);
         }
         catch  (Exception ex)
@@ -145,14 +173,20 @@ public class TourController : ControllerBase, ITourController
         }
         catch (UserNotFoundException ex)
         {
+            this.logger.LogWarning(ex, "User {UserGuid} not found while importing.", userGuid);
+            
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.Message);
         }
         catch (TourException ex)
         {
+            this.logger.LogWarning(ex, "Validation failed while importing.");
+            
             return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.Message);
         }
         catch (Exception ex)
         {
+            this.logger.LogError(ex, "Unexpected error while importing.");
+
             return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.Message);
         }
     }
