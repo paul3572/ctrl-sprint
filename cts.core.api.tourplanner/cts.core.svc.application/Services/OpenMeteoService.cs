@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using cts.core.svc.application.Interfaces;
 using cts.core.svc.contracts;
+using cts.core.svc.domain.Exceptions;
 
 namespace cts.core.svc.application.Services;
 
@@ -19,7 +20,7 @@ public sealed class OpenMeteoService : IWeatherService
             $"forecast?latitude={lat}&longitude={lon}&current=temperature_2m,weather_code");
 
         if (response == null)
-            throw new InvalidOperationException("No weather data received.");
+            throw new WeatherNotFoundException("No weather data received.");
 
         Console.WriteLine("Weather Data:");
         Console.WriteLine(response.Current);

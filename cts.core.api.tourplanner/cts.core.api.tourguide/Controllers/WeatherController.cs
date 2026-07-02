@@ -1,5 +1,6 @@
 ﻿using cts.core.svc.application.Interfaces;
 using cts.core.svc.contracts;
+using cts.core.svc.domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using TourGuideApplication.Interfaces;
 
@@ -19,6 +20,13 @@ public class WeatherController : ControllerBase, IWeatherController
     [HttpGet]
     public async Task<WeatherDto> GetWeather([FromQuery] double lat, [FromQuery] double lon)
     {
-        return await _weatherService.GetWeatherAsync(lat, lon);
+        try
+        {
+            return await _weatherService.GetWeatherAsync(lat, lon);
+        }
+        catch (WeatherNotFoundException ex)
+        {
+            return new WeatherDto(27, string.Empty);
+        }
     }
 }
