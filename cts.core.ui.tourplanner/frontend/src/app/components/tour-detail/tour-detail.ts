@@ -342,4 +342,5 @@ export class TourDetail implements OnInit {
   }
 
   protected readonly getWeatherEmoji = getWeatherEmoji;
+  protected readonly Math = Math;
 }

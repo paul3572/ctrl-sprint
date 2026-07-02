@@ -160,15 +160,21 @@
 
             <div class="info-item">
               @if (!isEditing()) {
-                <label>Distance (km)</label>
-                <div class="info-value">{{ tour()?.tourDistance }}</div>
+                <label>Distance (in km)</label>
+                <div class="info-value"> {{ (tour()?.tourDistance ?? 0) / 1000 }}</div>
               }
             </div>
 
             <div class="info-item">
               @if (!isEditing()) {
-                <label>Est. Time (min)</label>
-                <div class="info-value">{{ tour()?.estimatedTimeMinutes }}</div>
+                <label>Est. Time</label>
+                <div class="info-value">
+                  {{
+                    Math.floor((tour()?.estimatedTimeMinutes ?? 0) / 60)
+                  }} h {{
+                    (tour()?.estimatedTimeMinutes ?? 0) % 60
+                  }} min
+                </div>
               }
             </div>
 
@@ -235,7 +241,7 @@
           <h2>Weather</h2>
           <div class="info-item">
             @if (weatherFrom()) {
-              <label>At Starting point ({{tour()?.from}})</label>
+              <label>At Starting point ({{ tour()?.from }})</label>
               <div class="info-value">
                 Temperature: {{ weatherFrom()?.temperature }}°C
               </div>
@@ -244,7 +250,7 @@
               </div>
             }
             @if (weatherTo()) {
-              <label>At Destination ({{tour()?.to}})</label>
+              <label>At Destination ({{ tour()?.to }})</label>
               <div class="info-value">
                 Temperature: {{ weatherTo()?.temperature }}°C
               </div>
@@ -312,11 +318,16 @@
                   <div class="log-stats">
                     <div class="stat">
                       <span class="stat-label">Distance:</span>
-                      <span class="stat-value">{{ log.totalDistanceInMeters }} km</span>
+                      <span class="stat-value">
+                        {{ (log.totalDistanceInMeters / 1000) | number:'1.0-2' }} km
+                      </span>
                     </div>
+
                     <div class="stat">
                       <span class="stat-label">Time:</span>
-                      <span class="stat-value">{{ log.totalTimeMin }} min</span>
+                      <span class="stat-value">
+                        {{ Math.floor(log.totalTimeMin / 60) }} h {{ log.totalTimeMin % 60 }} min
+                      </span>
                     </div>
                   </div>
                 </div>
