@@ -42,14 +42,14 @@ export class SmugglerService {
     await this.tourService.loadToursFromBackend();
   }
 
-  private async readFile(file: File): Promise<Tour[]> {
+  private async readFile(file: File): Promise<TourDto[]> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
 
       reader.onload = () => {
         try {
           const json = JSON.parse(reader.result as string);
-          resolve(json as Tour[]);
+          resolve(json as TourDto[]);
         } catch (err) {
           reject(err);
         }
@@ -61,11 +61,9 @@ export class SmugglerService {
     });
   }
 
-  private async pushToBackend(userGuid: string, tours: Tour[]): Promise<void> {
-    const dto: TourDto[] = tours.map(t => this.mapTourToDto(t));
-
+  private async pushToBackend(userGuid: string, tours: TourDto[]): Promise<void> {
     await firstValueFrom(
-      this.http.post<Tour[]>(`/api/tour/buyData/${userGuid}`, dto, {
+      this.http.post<Tour[]>(`/api/tour/buyData/${userGuid}`, tours, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -91,7 +89,7 @@ export class SmugglerService {
       tourLogs: (tour.tourLogs ?? []).map(log => ({
         tourLogGuid: log.tourLogGuid,
         tourGuid: log.tourGuid,
-        timestamp: log.timestamp.toString(),
+        timestamp: log.timestamp.toISOString(),
         comment: log.comment,
         difficulty: log.difficulty,
         totalDistanceInMeters: log.totalDistanceInMeters,

@@ -97,7 +97,7 @@ public class TourController : ControllerBase, ITourController
     }
 
     [HttpPost("buyData/{userGuid}")]
-    public async Task<ActionResult<List<TourDto>>> BuyData(Guid userGuid, List<TourDto> tours)
+    public async Task<ActionResult<List<TourDto>>> BuyData(Guid userGuid, [FromBody] List<TourDto> tours)
     {
         try
         {

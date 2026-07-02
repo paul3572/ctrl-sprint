@@ -10,7 +10,10 @@ export class MapFacadeService {
   private readonly notifications = inject(NotificationService);
 
   initMap(container: HTMLElement): void {
-    if (this.map) return;
+    if (this.map) {
+      this.map.remove();
+      this.map = null;
+    }
 
     if (!(container instanceof HTMLElement)) {
       throw new Error('Leaflet container is not a valid HTMLElement.');

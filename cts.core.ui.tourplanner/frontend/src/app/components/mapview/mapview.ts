@@ -27,12 +27,19 @@ export class Mapview implements AfterViewInit {
   private readonly routeEffect = effect(() => {
     const route = this.routeGeometry();
 
+    if (!route) return;
+    if (!this.mapInitialized) return;
+
     if (route && this.mapInitialized) {
       this.mapFacade.setRoute(route);
     }
   });
 
   ngAfterViewInit(): void {
+    const el = this.mapHost().nativeElement;
+
+    if (!el) return;
+
     this.mapFacade.initMap(this.mapHost().nativeElement);
     this.mapInitialized = true;
 
