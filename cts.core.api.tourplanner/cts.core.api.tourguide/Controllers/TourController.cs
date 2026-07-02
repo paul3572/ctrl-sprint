@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using cts.core.svc.application.Interfaces;
 using cts.core.svc.contracts.Tours;
+using cts.core.svc.domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using TourGuideApplication.Interfaces;
 
@@ -19,7 +20,7 @@ public class TourController : ControllerBase, ITourController
     
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<List<TourDto>>> GetToursOfUser(Guid userGuid)
     {
         try
@@ -28,18 +29,23 @@ public class TourController : ControllerBase, ITourController
         }
         catch (Exception ex)
         {
-            return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.Message);
+            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.Message);
         }
     }
 
     [HttpGet("{tourGuid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TourDto>> GetTour(Guid tourGuid)
     {
         try
         {
             return Ok(await this.tourService.GetTour(tourGuid));
+        }
+        catch (TourException ex)
+        {
+            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.Message);
         }
         catch  (Exception ex)
         {
@@ -50,11 +56,24 @@ public class TourController : ControllerBase, ITourController
     [HttpPost("{userGuid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<TourDto>> CreateTour(Guid userGuid, TourCmd tour)
     {
         try
         {
             return Ok(await this.tourService.CreateTour(userGuid, tour));
+        }
+        catch (UserNotFoundException ex)
+        {
+            return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.Message);
+        }
+        catch (TransportException ex)
+        {
+            return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.Message);
+        }
+        catch (TourException ex)
+        {
+            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.Message);
         }
         catch (ValidationException e)
         {
@@ -69,11 +88,20 @@ public class TourController : ControllerBase, ITourController
     [HttpPatch("{tourGuid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<TourDto>> UpdateTour(Guid tourGuid, TourCmd tour)
     {
         try
         {
             return Ok(await this.tourService.UpdateTour(tourGuid, tour));
+        }
+        catch (TourNotFoundException ex)
+        {
+            return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.Message);
+        }
+        catch (TourException ex)
+        {
+            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.Message);
         }
         catch  (Exception ex)
         {
@@ -84,28 +112,48 @@ public class TourController : ControllerBase, ITourController
     [HttpDelete("{tourGuid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<TourDto>> DeleteTour(Guid tourGuid)
     {
         try
         {
             return Ok(await this.tourService.DeleteTour(tourGuid));
         }
-        catch  (Exception ex)
+        catch (TourNotFoundException ex)
         {
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.Message);
+        }
+        catch (TourException ex)
+        {
+            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.Message);
+        }
+        catch  (Exception ex)
+        {
+            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.Message);
         }
     }
 
     [HttpPost("buyData/{userGuid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<List<TourDto>>> BuyData(Guid userGuid, [FromBody] List<TourDto> tours)
     {
         try
         {
             return Ok(await this.tourService.BuyData(userGuid, tours));
         }
-        catch (Exception ex)
+        catch (UserNotFoundException ex)
         {
             return Problem(statusCode: StatusCodes.Status404NotFound, detail: ex.Message);
+        }
+        catch (TourException ex)
+        {
+            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: ex.Message);
         }
     }
 }

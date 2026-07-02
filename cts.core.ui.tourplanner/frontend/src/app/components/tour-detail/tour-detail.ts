@@ -165,10 +165,14 @@ export class TourDetail implements OnInit {
 
     this.isSubmitting.set(true);
     try {
-      const updatedTour = await this.tourService.updateTour(
-        currentTour.tourGuid,
-        this.editForm.value,
-      );
+      const updatedTour = await this.tourService.updateTour(currentTour.tourGuid, {
+        name: this.editForm.get('name')?.value,
+        description: this.editForm.get('description')?.value,
+        from: currentTour.from,
+        to: currentTour.to,
+        transportType: this.editForm.get('transportType')?.value,
+        rating: this.editForm.get('rating')?.value,
+      });
       if (updatedTour) {
         this.tour.set(updatedTour);
       }

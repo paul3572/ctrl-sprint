@@ -98,6 +98,11 @@ export class TourService {
 
       await this.loadToursFromBackend();
 
+      const updatedTour = this.getTourByGuid(tourGuid);
+      if (updatedTour) {
+        return updatedTour;
+      }
+
       return this.mapTourDto(response);
     } catch (error) {
       if (error instanceof HttpErrorResponse) {
@@ -105,7 +110,11 @@ export class TourService {
       } else {
         this.error.set('An unknown error occurred.');
       }
-      return updates as Tour;
+      const currentTour = this.getTourByGuid(tourGuid);
+      if (currentTour) {
+        throw new Error('Failed to update tour');
+      }
+      throw error;
     } finally {
       this.isLoading.set(false);
     }

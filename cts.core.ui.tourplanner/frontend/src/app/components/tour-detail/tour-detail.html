@@ -235,21 +235,21 @@
           <h2>Weather</h2>
           <div class="info-item">
             @if (weatherFrom()) {
-              <label>At Starting point</label>
+              <label>At Starting point ({{tour()?.from}})</label>
               <div class="info-value">
-                Temperature: {{ weatherFrom()?.temperature }}°C {{ getWeatherEmoji(weatherFrom()?.description ?? '') }}
+                Temperature: {{ weatherFrom()?.temperature }}°C
               </div>
               <div class="info-value">
-                Condition: {{ weatherFrom()?.description }}
+                Condition: {{ weatherFrom()?.description }} {{ getWeatherEmoji(weatherFrom()?.description ?? '') }}
               </div>
             }
             @if (weatherTo()) {
-              <label>At Destination</label>
+              <label>At Destination ({{tour()?.to}})</label>
               <div class="info-value">
-                Temperature: {{ weatherTo()?.temperature }}°C {{ getWeatherEmoji(weatherTo()?.description ?? '') }}
+                Temperature: {{ weatherTo()?.temperature }}°C
               </div>
               <div class="info-value">
-                Condition: {{ weatherTo()?.description }}
+                Condition: {{ weatherTo()?.description }} {{ getWeatherEmoji(weatherTo()?.description ?? '') }}
               </div>
             }
           </div>

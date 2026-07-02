@@ -1,6 +1,7 @@
 ﻿using cts.core.svc.application.Interfaces;
 using cts.core.svc.contracts.TourLogs;
 using cts.core.svc.contracts.Tours;
+using cts.core.svc.domain.Exceptions;
 
 namespace cts.core.svc.application.Services;
 
@@ -61,14 +62,14 @@ public class TourService : ITourService
         var transport = await this.transportRepository.GetTransportTypeByName(tour.TransportName);
         
         if (transport is null)
-            throw new KeyNotFoundException($"Transport type {tour.TransportName} not found.");
+            throw new TransportException($"Transport type {tour.TransportName} not found.");
         
         var routeResult = await this.routeService.GetRouteAsync(tour.From, tour.To, transport.OpenRouteProfile);
         
         var createdTour = await this.tourRepository.CreateTour(userGuid, tour, routeResult);
 
         if (createdTour.Value is null)
-            throw new KeyNotFoundException($"Tour could not be created for user with Guid {userGuid}.");
+            throw new TourException($"Tour could not be created for user with Guid {userGuid}.");
         
         return new TourDto(
             createdTour.Value.TourGuid,
@@ -91,7 +92,7 @@ public class TourService : ITourService
         var updatedTour = await this.tourRepository.UpdateTour(tourGuid, tour);
 
         if (updatedTour.Value is null)
-            throw new KeyNotFoundException($"Tour could not be updated for tour with Guid {tourGuid}.");
+            throw new TourException($"Tour could not be updated for tour with Guid {tourGuid}.");
         
         return new TourDto(
             updatedTour.Value.TourGuid,
@@ -123,7 +124,7 @@ public class TourService : ITourService
         var deletedTour = await this.tourRepository.DeleteTour(tourGuid);
 
         if (deletedTour.Value is null)
-            throw new KeyNotFoundException($"Tour could not be deleted for tour with Guid {tourGuid}.");
+            throw new TourException($"Tour could not be deleted for tour with Guid {tourGuid}.");
         
         return new TourDto(
             deletedTour.Value.TourGuid,
@@ -155,7 +156,7 @@ public class TourService : ITourService
         var newTours = await this.tourRepository.BuyData(userGuid, tours);
 
         if (newTours.Value is null)
-            throw new KeyNotFoundException("Couldn't import tours.");
+            throw new TourException("Couldn't import tours.");
 
         return newTours.Value
             .Select(t => new TourDto(

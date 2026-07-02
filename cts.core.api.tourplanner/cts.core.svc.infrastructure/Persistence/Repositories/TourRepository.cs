@@ -1,6 +1,7 @@
 ﻿using cts.core.svc.application.Interfaces;
 using cts.core.svc.contracts.Tours;
 using cts.core.svc.domain;
+using cts.core.svc.domain.Exceptions;
 using cts.core.svc.domain.OpenRoute;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -56,7 +57,7 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
         var user = await db.Users.FirstOrDefaultAsync(u  => u.UserGuid == userGuid);
         
         if (user is null)
-            throw new KeyNotFoundException($"User with Guid {userGuid} not found.");
+            throw new UserNotFoundException($"User with Guid {userGuid} not found.");
 
         var creatingTour = new Tour(
             user,
@@ -85,7 +86,7 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
         var tour = await db.Tours.FirstOrDefaultAsync(t => t.TourGuid == tourGuid);
         
         if (tour is null)
-            throw new KeyNotFoundException($"Tour with Guid {tourGuid} not found.");
+            throw new TourNotFoundException($"Tour with Guid {tourGuid} not found.");
         
         tour.Name = updatingTour.Name;
         tour.Description = updatingTour.Description;
@@ -110,7 +111,7 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
         
         if (tour is null)
         {
-            throw new KeyNotFoundException($"Tour with Guid {tourGuid} not found.");
+            throw new TourNotFoundException($"Tour with Guid {tourGuid} not found.");
         }
 
         var deletedTour = db.Tours.Remove(tour);
@@ -124,7 +125,7 @@ public class TourRepository(ITransportRepository transportRepo, TourPlannerDbCon
             .FirstOrDefaultAsync(u => u.UserGuid == userGuid);
 
         if (user is null)
-            throw new KeyNotFoundException($"User with Guid {userGuid} not found.");
+            throw new UserNotFoundException($"User with Guid {userGuid} not found.");
 
         var result = new List<Tour>();
         
