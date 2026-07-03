@@ -203,7 +203,7 @@ The API's rate limits and occasional response delays meant that route calculatio
 Integrating a plain JavaScript library like Leaflet into Angular's component lifecycle required extra care — the map has to be initialized after the DOM element exists and cleaned up when the component is destroyed, otherwise it didn't work once it was called again.
 
 ### JWT Authentication
-First we wanted to do authentication using Cookies. However, we decided to go the JWT way, since it is more secure and easier to implement. We also learned that the stateless nature of JWT means that the backend cannot invalidate tokens, which is why we had to implement a token refresh mechanism to allow users to log out and refresh their session.
+We considered a purely session-based (server-side) authentication approach first, but decided on stateless JWTs instead, which we transport via an HTTP-only cookie to avoid exposing the token to JavaScript
 
 ### Serilog
 Structured logging only pays off once a consistent logging convention is established. Early on, log messages were inconsistent in detail and level (Info vs. Debug vs. Error), which made it harder to filter relevant information — a clearer logging convention was introduced later in the project.
