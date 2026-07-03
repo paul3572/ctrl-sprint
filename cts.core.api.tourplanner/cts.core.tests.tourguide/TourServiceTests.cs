@@ -2,6 +2,7 @@
 using cts.core.svc.application.Services;
 using cts.core.svc.contracts.Tours;
 using cts.core.svc.domain;
+using cts.core.svc.domain.Exceptions;
 using cts.core.svc.domain.OpenRoute;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -129,7 +130,7 @@ public class TourServiceTests
             .ReturnsAsync((Transport?)null);
 
         // Act + Assert
-        Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+        Assert.ThrowsAsync<TransportException>(async () =>
             await _service.CreateTour(Guid.NewGuid(), command));
 
         routeService.VerifyNoOtherCalls();
@@ -177,7 +178,7 @@ public class TourServiceTests
             .ReturnsAsync(new ActionResult<Tour>((Tour?)null));
 
         // Act + Assert
-        Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+        Assert.ThrowsAsync<TourException>(async () =>
             await _service.CreateTour(userGuid, command));
     }
 }
