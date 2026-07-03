@@ -1,0 +1,116 @@
+<svg viewBox="0 0 1040 620" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="1040" height="620" fill="#ffffff"/>
+
+  <defs>
+    <marker id="arrowSolid" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#1a1a1a"/>
+    </marker>
+  </defs>
+
+  <!-- Participant boxes -->
+  <g font-size="12.5" fill="#1a1a1a" text-anchor="middle">
+    <g>
+      <rect x="20" y="20" width="110" height="34" fill="#ffffff" stroke="#1a1a1a"/>
+      <text x="75" y="42">User</text>
+    </g>
+    <g>
+      <rect x="165" y="20" width="130" height="34" fill="#ffffff" stroke="#1a1a1a"/>
+      <text x="230" y="34">Angular</text>
+      <text x="230" y="48">Frontend</text>
+    </g>
+    <g>
+      <rect x="325" y="20" width="140" height="34" fill="#ffffff" stroke="#1a1a1a"/>
+      <text x="395" y="34">TourController</text>
+      <text x="395" y="48">(ASP.NET)</text>
+    </g>
+    <g>
+      <rect x="495" y="20" width="140" height="34" fill="#ffffff" stroke="#1a1a1a"/>
+      <text x="565" y="34">TourService</text>
+      <text x="565" y="48">(Business Layer)</text>
+    </g>
+    <g>
+      <rect x="665" y="20" width="150" height="34" fill="#ffffff" stroke="#1a1a1a"/>
+      <text x="740" y="34">OpenRouteService</text>
+      <text x="740" y="48">(external API)</text>
+    </g>
+    <g>
+      <rect x="845" y="20" width="150" height="34" fill="#ffffff" stroke="#1a1a1a"/>
+      <text x="920" y="34">TourRepository</text>
+      <text x="920" y="48">(DAL)</text>
+    </g>
+  </g>
+
+  <!-- Lifelines -->
+  <g stroke="#999999" stroke-width="1" stroke-dasharray="4,3">
+    <line x1="75"  y1="54" x2="75"  y2="600"/>
+    <line x1="230" y1="54" x2="230" y2="600"/>
+    <line x1="395" y1="54" x2="395" y2="600"/>
+    <line x1="565" y1="54" x2="565" y2="600"/>
+    <line x1="740" y1="54" x2="740" y2="600"/>
+    <line x1="920" y1="54" x2="920" y2="600"/>
+  </g>
+
+  <!-- DB note at bottom of repository lifeline -->
+  <g font-size="11.5" fill="#1a1a1a" text-anchor="middle">
+    <rect x="855" y="580" width="130" height="26" fill="#f2f2f2" stroke="#1a1a1a"/>
+    <text x="920" y="597">PostgreSQL</text>
+  </g>
+
+  <g font-size="12" fill="#1a1a1a">
+    <!-- 1 -->
+    <line x1="75" y1="80" x2="220" y2="80" stroke="#1a1a1a" marker-end="url(#arrowSolid)"/>
+    <text x="80" y="74">1: fill &amp; submit tour form</text>
+
+    <!-- 2 self-loop FE -->
+    <path d="M230,100 C275,100 275,118 230,118" stroke="#1a1a1a" fill="none" marker-end="url(#arrowSolid)"/>
+    <text x="238" y="98">2: validate input</text>
+
+    <!-- 3 -->
+    <line x1="230" y1="140" x2="385" y2="140" stroke="#1a1a1a" marker-end="url(#arrowSolid)"/>
+    <text x="235" y="134">3: POST /api/tours (dto)</text>
+
+    <!-- 4 -->
+    <line x1="395" y1="162" x2="555" y2="162" stroke="#1a1a1a" marker-end="url(#arrowSolid)"/>
+    <text x="400" y="156">4: CreateTour(dto)</text>
+
+    <!-- 5 -->
+    <line x1="565" y1="184" x2="730" y2="184" stroke="#1a1a1a" marker-end="url(#arrowSolid)"/>
+    <text x="570" y="178">5: GET route(from, to, transportType)</text>
+
+    <!-- 6 return dashed -->
+    <line x1="730" y1="210" x2="575" y2="210" stroke="#1a1a1a" stroke-dasharray="6,4" marker-end="url(#arrowSolid)"/>
+    <text x="570" y="204" text-anchor="end">6: distance, duration, geometry</text>
+
+    <!-- 7 self-loop Service -->
+    <path d="M565,230 C615,230 615,250 565,250" stroke="#1a1a1a" fill="none" marker-end="url(#arrowSolid)"/>
+    <text x="575" y="228">7: build Tour entity (with computed route data)</text>
+
+    <!-- 8 -->
+    <line x1="565" y1="272" x2="910" y2="272" stroke="#1a1a1a" marker-end="url(#arrowSolid)"/>
+    <text x="570" y="266">8: AddAsync(tour)</text>
+
+    <!-- 9 -->
+    <line x1="920" y1="294" x2="920" y2="310" stroke="#1a1a1a" marker-end="url(#arrowSolid)"/>
+    <text x="805" y="306">9: INSERT INTO tours (EF Core)</text>
+
+    <!-- 10 return -->
+    <line x1="920" y1="330" x2="920" y2="346" stroke="#1a1a1a" stroke-dasharray="6,4" marker-end="url(#arrowSolid)"/>
+    <text x="810" y="342">10: generated Id</text>
+
+    <!-- 11 return -->
+    <line x1="910" y1="368" x2="575" y2="368" stroke="#1a1a1a" stroke-dasharray="6,4" marker-end="url(#arrowSolid)"/>
+    <text x="570" y="362" text-anchor="end">11: saved Tour entity</text>
+
+    <!-- 12 return -->
+    <line x1="555" y1="390" x2="405" y2="390" stroke="#1a1a1a" stroke-dasharray="6,4" marker-end="url(#arrowSolid)"/>
+    <text x="400" y="384" text-anchor="end">12: TourDto</text>
+
+    <!-- 13 return -->
+    <line x1="385" y1="412" x2="240" y2="412" stroke="#1a1a1a" stroke-dasharray="6,4" marker-end="url(#arrowSolid)"/>
+    <text x="235" y="406" text-anchor="end">13: 201 Created + JSON</text>
+
+    <!-- 14 return -->
+    <line x1="220" y1="434" x2="85" y2="434" stroke="#1a1a1a" stroke-dasharray="6,4" marker-end="url(#arrowSolid)"/>
+    <text x="80" y="428" text-anchor="end">14: show new tour in list</text>
+  </g>
+</svg>
