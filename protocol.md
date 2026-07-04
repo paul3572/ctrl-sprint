@@ -278,3 +278,27 @@ Testing these components provides confidence that the application's core functio
 # Unique Feature
 
 Our unique feature contained the implementation of a call to the OpenMeteoService. This service retrieves the current weather for a given location (consisting of latitude and longitude) and returns the temperature and weather code. The weather code is then mapped to a human-readable description (e.g., "Clear sky", "Rain", etc.) and displayed in the tour details for the locations of the starting point and destination.
+
+---
+
+# Tracked Time
+
+| Feature / Task                                                    |     Time |
+|-------------------------------------------------------------------|---------:|
+| Project setup (Angular, ASP.NET, PostgreSQL, project structure)   |      5 h |
+| User authentication (registration, login, JWT, cookies)           |     12 h |
+| Database design and Entity Framework setup                        |      6 h |
+| Tour CRUD implementation                                          |     10 h |
+| Tour Log CRUD implementation                                      |      8 h |
+| OpenRouteService integration (distance, duration, route geometry) |      7 h |
+| Leaflet map integration                                           |      3 h |
+| Full-text search implementation                                   |      1 h |
+| Computed attributes (Popularity & Child-Friendliness)             |      4 h |
+| Import / Export functionality (JSON)                              |      5 h |
+| Input validation and error handling                               |      4 h |
+| Logging (Serilog)                                                 |      2 h |
+| Unit tests                                                        |      6 h |
+| UI design and reusable Angular components                         |      8 h |
+| Documentation (protocol, UML diagrams, wireframes, presentation)  |      5 h |
+| Bug fixing, refactoring and polishing                             |     10 h |
+| **Total**                                                         | **96 h** |
